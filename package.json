@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/Wildhoney/ngDroplet/issues"
   },
-  "homepage": "https://github.com/Wildhoney/ngDroplet"
+  "homepage": "https://github.com/Wildhoney/ngDroplet",
+  "dependencies": {
+    "express": "^4.9.7"
+  }
 }
