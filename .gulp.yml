@@ -1,0 +1,7 @@
+components: components/ngDroplet.js
+
+build:
+  directory: dist
+  copy: example/js/vendor/ng-droplet
+  development: ng-droplet.js
+  production: ng-droplet.min.js

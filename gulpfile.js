@@ -1,9 +1,8 @@
 (function() {
-
-    var mainModule = 'components/ngDroplet.js',
-        vendorDest = 'example/js/vendor/ng-droplet',
-        devDist    = 'ng-droplet.js',
-        minDist    = 'ng-droplet.min.js';
+    
+    var yaml   = require('js-yaml'),
+        fs     = require('fs'),
+        config = yaml.safeLoad(fs.readFileSync('.gulp.yml', 'utf8'));
 
     var gulp   = require('gulp'),
         uglify = require('gulp-uglify'),
@@ -12,13 +11,13 @@
         jshint = require('gulp-jshint');
 
     gulp.task('build', function gulpBuild(){
-        gulp.src(mainModule)
-            .pipe(rename(devDist))
-            .pipe(gulp.dest('dist'))
-            .pipe(gulp.dest(vendorDest))
-            .pipe(rename(minDist))
+        gulp.src(config.components)
+            .pipe(rename(config.build.development))
+            .pipe(gulp.dest(config.build.directory))
+            .pipe(gulp.dest(config.build.copy))
+            .pipe(rename(config.build.production))
             .pipe(uglify())
-            .pipe(gulp.dest('dist'))
+            .pipe(gulp.dest(config.build.directory))
     });
 
     gulp.task('karma', function gulpKarma() {
@@ -27,7 +26,7 @@
             'example/js/vendor/angular/angular.js',
             'example/js/vendor/angular-mocks/angular-mocks.js',
             'tests/Spec.js',
-            mainModule
+            config.components
         ];
 
         return gulp.src(testFiles).pipe(karma({
@@ -40,12 +39,12 @@
 
     gulp.task('hint', function gulpHint() {
 
-        return gulp.src(mainModule)
+        return gulp.src(config.components)
             .pipe(jshint('.jshintrc'))
             .pipe(jshint.reporter('default'));
     });
 
     gulp.task('test', ['hint']);
-    gulp.task('default', ['hint', 'test']);
+    gulp.task('default', ['test', 'build']);
 
 })();
