@@ -1,6 +1,6 @@
 {
   "name": "ng-droplet",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Angular.js HTML5 file uploading with drag & drop and image/file preview.",
   "main": "dist/ng-droplet.min.js",
   "scripts": {
