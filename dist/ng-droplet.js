@@ -5,7 +5,7 @@
     // The truest wisdom is a resolute determination...
     var module = $angular.module('ngDroplet', []);
 
-    module.directive('droplet', function DropletDirective() {
+    module.directive('droplet', ['$compile', function DropletDirective($compile) {
 
         return {
 
@@ -14,20 +14,6 @@
              * @type {String}
              */
             restrict: 'EA',
-
-            /**
-             * @property scope
-             * @type {Boolean}
-             */
-            scope: {
-                moduleInterface: '=interface'
-            },
-
-            /**
-             * @property transclude
-             * @type {Boolean}
-             */
-            transclude: true,
 
             /**
              * @method controller
@@ -42,21 +28,66 @@
                  */
                 $scope.files = [];
 
-            }],
+                /**
+                 * @property validFiles
+                 * @type {Array}
+                 */
+                $scope.validFiles = [];
 
-            /**
-             * @method link
-             * @param scope {Object}
-             * @return {void}
-             */
-            link: function link(scope, element, attributes, transclude) {
+                /**
+                 * @property invalidFiles
+                 * @type {Array}
+                 */
+                $scope.invalidFiles = [];
 
-                transclude();
+                /**
+                 * @property uploadedFiles
+                 * @type {Array}
+                 */
+                $scope.uploadedFiles = [];
 
-            }
+                /**
+                 * @property deletedFiles
+                 * @type {Array}
+                 */
+                $scope.deletedFiles = [];
+
+                /**
+                 * @property uploadStatus
+                 * @type {Object}
+                 */
+                $scope.uploadStatus = {
+
+                    /**
+                     * @property percentComplete
+                     * @type {Number}
+                     */
+                    percentComplete: 0
+
+                };
+
+                /**
+                 * @method uploadAllFiles
+                 * @return {void}
+                 */
+                $scope.uploadAllFiles = $angular.noop;
+
+                /**
+                 * @method clearAllFiles
+                 * @return {void}
+                 */
+                $scope.clearAllFiles = $angular.noop;
+
+                /**
+                 * @method abortUpload
+                 * @return {void}
+                 */
+                $scope.abortUpload = $angular.noop;
+
+            }]
 
         }
 
-    });
+    }]);
 
 })(window.angular);
