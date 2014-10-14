@@ -18,45 +18,15 @@
 </head>
 <body ng-app="dropletApp">
 
-    <droplet>
+    <section class="droplet" ng-controller="IndexController">
 
-        <h1>Upload Files ({{files.length}} in total)</h1>
+        <h1>Upload Files ({{interface.getFiles().length}} in total)</h1>
 
-        <ul class="counts">
-            <li class="valid">Valid: {{validFiles.length}}</li>
-            <li class="invalid">Invalid: {{invalidFiles.length}}</li>
-            <li class="uploaded">Uploaded: {{uploadedFiles.length}}</li>
-            <li class="deleted">Deleted: {{deletedFiles.length}}</li>
-        </ul>
+        Invalid Files: {{interface.getFiles(2).length}}
 
-        <div class="buttons">
-            <button data-droplet-upload-all>Upload All</button>
-            <button data-droplet-clear-all>Clear</button>
-            <button data-droplet-abort-upload>Abort Upload</button>
-        </div>
+        <droplet ng-model="interface"></droplet>
 
-        <h3 class="uploading-percentage">
-            Uploaded Percentage: {{uploadStatus.percentComplete}}%
-        </h3>
-
-        <dragdrop>
-
-            <div class="error" ng-show="uploadStatus.error">
-                An error occurred during the upload process. Please try again later.
-            </div>
-
-            <div class="file" ng-repeat="file in validFiles" ng-class="{ type: type }">
-
-                <a class="remove" ng-click="deleteFile()">Discard.</a>
-                <image-preview ng-model="file"></image-preview>
-
-            </div>
-
-            <input data-droplet-multiple />
-
-        </dragdrop>
-
-    </droplet>
+    </section>
 
 </body>
 </html>

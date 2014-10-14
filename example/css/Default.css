@@ -3,3 +3,14 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+section.droplet {
+    border: 1px solid red;
+}
+
+section.droplet droplet {
+    border: 1px solid green;
+    width: 500px;
+    height: 350px;
+    display: inline-block;
+}
