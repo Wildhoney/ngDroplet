@@ -16,6 +16,12 @@
             restrict: 'EA',
 
             /**
+             * @property template
+             * @type {String}
+             */
+            template: '<droplet-preview ng-repeat="file in filterFiles(FILE_TYPES.VALID)" ng-model="file"></droplet-preview>',
+
+            /**
              * @property require
              * @type {String}
              */
@@ -73,11 +79,34 @@
                         type = type || $scope.FILE_TYPES.VALID;
 
                         // Create the model and then register the file.
-                        var model = { file: file, type: type, added: new $window.Date() };
+                        var model = { file: file, type: type, added: new $window.Date(), mimeType: file.type,
+                                      extension: $scope.getExtension(file) };
                         $scope.files.push(model);
 
                     }
 
+                };
+
+                /**
+                 * @method filterFiles
+                 * @param type {Number}
+                 * @return {Array}
+                 */
+                $scope.filterFiles = function filterFiles(type) {
+
+                    return $scope.files.filter(function filter(file) {
+                        return type & file.type;
+                    });
+
+                };
+
+                /**
+                 * @method getExtension
+                 * @param file {File}
+                 * @return {String}
+                 */
+                $scope.getExtension = function getExtension(file) {
+                    return file.name.split('.').pop().trim().toLowerCase();
                 };
 
                 /**
@@ -92,7 +121,7 @@
                         for (var index = 0, numFiles = files.length; index < numFiles; index++) {
 
                             var file      = files[index],
-                                extension = file.name.split('.').pop().trim().toLowerCase(),
+                                extension = $scope.getExtension(file),
                                 type      = $scope.FILE_TYPES.VALID;
 
                             if ($scope.extensions.indexOf(extension) === -1) {
@@ -161,9 +190,7 @@
                             if (type) {
 
                                 // Apply any necessary filters if a bitwise value has been supplied.
-                                return $scope.files.filter(function filter(file) {
-                                    return type & file.type;
-                                });
+                                return $scope.filterFiles(type);
 
                             }
 
@@ -236,6 +263,97 @@
                     scope.traverseFiles(event.dataTransfer.files);
 
                 });
+
+            }
+
+        }
+
+    }]).directive('dropletPreview', ['$window', function DropletPreviewDirective($window) {
+
+        return {
+
+            /**
+             * @property scope
+             * @type {Object}
+             */
+            scope: {
+                model: '=ngModel'
+            },
+
+            /**
+             * @property restrict
+             * @type {String}
+             */
+            restrict: 'E',
+
+            /**
+             * @property replace
+             * @type {Boolean}
+             */
+            replace: true,
+
+            /**
+             * @property template
+             * @type {String}
+             */
+            template: '<section class="droplet-preview"><div class="extension-{{model.extension}}" ng-show="!isImage(model.file)"><label>{{model.file.name}}</label></div><img ng-show="isImage(model.file)" ng-src="{{imageData}}" class="droplet-preview" /></section>',
+
+            /**
+             * @method controller
+             * @param $scope {Object}
+             * @return {void}
+             */
+            controller: ['$scope', function controller($scope) {
+
+                /**
+                 * @method isImage
+                 * @param file {File}
+                 * @return {Boolean}
+                 */
+                $scope.isImage = function isImage(file) {
+                    return !!file.type.match(/^image\//i);
+                };
+
+            }],
+
+            /**
+             * @method link
+             * @param scope {Object}
+             * @return {void}
+             */
+            link: function link(scope) {
+
+                /**
+                 * @property imageData
+                 * @type {String}
+                 */
+                scope.imageData = '';
+
+                // Instantiate the file reader for reading the image data.
+                var fileReader = new $window.FileReader();
+
+                /**
+                 * @method onload
+                 * @return {void}
+                 */
+                fileReader.onload = function onload(event) {
+
+                    scope.$apply(function apply() {
+
+                        // Voila! Define the image data.
+                        scope.imageData = event.target.result;
+
+                    });
+
+                };
+
+                if (scope.isImage(scope.model.file)) {
+
+                    // Initialise the loading of the image into the file reader.
+                    fileReader.readAsDataURL(scope.model.file);
+
+                }
+
 
             }
 

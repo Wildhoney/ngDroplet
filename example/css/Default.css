@@ -14,3 +14,10 @@ section.droplet droplet {
     height: 350px;
     display: inline-block;
 }
+
+section.droplet droplet section.droplet-preview img {
+    width: 100px;
+    height: 100px;
+    float: left;
+    overflow: hidden;
+}

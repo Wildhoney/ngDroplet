@@ -12,7 +12,7 @@
         // Listen for when the interface has been configured.
         $scope.$on('$dropletReady', function whenDropletReady() {
 
-            $scope.interface.allowedExtensions(['png', 'jpg', 'bmp', 'gif', 'svg']);
+            $scope.interface.allowedExtensions(['png', 'jpg', 'bmp', 'gif', 'svg', 'torrent']);
 
         });
 
