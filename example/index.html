@@ -22,7 +22,8 @@
 
         <h1>Upload Files ({{interface.getFiles().length}} in total)</h1>
 
-        Invalid Files: {{interface.getFiles(2).length}}
+        Invalid Files: {{interface.getFiles(interface.FILE_TYPES.INVALID).length}}
+        Uploaded Files: {{interface.getFiles(interface.FILE_TYPES.UPLOADED).length}}
 
         <droplet ng-model="interface"></droplet>
 
