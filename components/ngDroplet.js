@@ -46,7 +46,7 @@
                  * @constant FILE_TYPES
                  * @type {Object}
                  */
-                $scope.FILE_TYPES = { VALID: 1, INVALID: 2, DELETED: 4 };
+                $scope.FILE_TYPES = { VALID: 1, INVALID: 2, DELETED: 4, UPLOADED: 8 };
 
                 /**
                  * @property files
@@ -145,6 +145,16 @@
                  * @return {void}
                  */
                 $scope.uploadFiles = function uploadFiles() {
+
+                    var formData = new $window.FormData();
+
+                    // Iterate all of the valid files to append them to the previously created
+                    // `formData` object.
+                    $angular.forEach($scope.filterFiles($scope.FILE_TYPES.VALID), function forEach(model) {
+                        formData.append('file', model.file);
+                    });
+
+                    console.log(formData);
 
                 };
 
