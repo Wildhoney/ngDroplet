@@ -55,6 +55,15 @@
                 $scope.files = [];
 
                 /**
+                 * @property options
+                 * @type {Object}
+                 */
+                $scope.options = {
+                    disableXFileSize: false,
+                    useArray: true
+                };
+
+                /**
                  * @property extensions
                  * @type {Array}
                  */
@@ -208,9 +217,10 @@
                  */
                 $scope.uploadFiles = function uploadFiles() {
 
-                    var httpRequest = new $window.XMLHttpRequest(),
-                        formData    = new $window.FormData(),
-                        queuedFiles = $scope.filterFiles($scope.FILE_TYPES.VALID);
+                    var httpRequest  = new $window.XMLHttpRequest(),
+                        formData     = new $window.FormData(),
+                        queuedFiles  = $scope.filterFiles($scope.FILE_TYPES.VALID),
+                        fileProperty = $scope.options.useArray ? 'file[]' : 'file';
 
                     // Initiate the HTTP request.
                     httpRequest.open('post', $scope.requestUrl, true);
@@ -218,11 +228,17 @@
                     // Iterate all of the valid files to append them to the previously created
                     // `formData` object.
                     $angular.forEach(queuedFiles, function forEach(model) {
-                        formData.append('file', model.file);
+                        formData.append(fileProperty, model.file);
                     });
 
-                    // Setup the file size of the request, and any other headers.
-                    httpRequest.setRequestHeader('X-File-Size', $scope.getRequestLength(queuedFiles));
+                    if (!$scope.options.disableXFileSize) {
+
+                        // Setup the file size of the request.
+                        httpRequest.setRequestHeader('X-File-Size', $scope.getRequestLength(queuedFiles));
+
+                    }
+
+                    // ...And any other additional HTTP request headers.
                     $scope.addRequestHeaders(httpRequest);
 
                     // Configure the event listeners for the impending request.
@@ -319,6 +335,23 @@
                          */
                         addFile: function addFile(file, type) {
                             $scope.registerFile(file)(type || $scope.FILE_TYPES.VALID);
+                        },
+
+                        /**
+                         * @method disableXFileSize
+                         * @return {void}
+                         */
+                        disableXFileSize: function disableXFileSize() {
+                            $scope.options.disableXFileSize = true;
+                        },
+
+                        /**
+                         * @method useArray
+                         * @param value {Boolean}
+                         * @return {void}
+                         */
+                        useArray: function useArray(value) {
+                            $scope.options.useArray = !!value;
                         },
 
                         /**
