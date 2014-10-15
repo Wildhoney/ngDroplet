@@ -46,7 +46,7 @@
                  * @constant FILE_TYPES
                  * @type {Object}
                  */
-                $scope.FILE_TYPES = { VALID: 1, INVALID: 2, DELETED: 4 };
+                $scope.FILE_TYPES = { VALID: 1, INVALID: 2, DELETED: 4, UPLOADED: 8 };
 
                 /**
                  * @property files
@@ -59,6 +59,68 @@
                  * @type {Array}
                  */
                 $scope.extensions = [];
+
+                /**
+                 * @property requestUrl
+                 * @type {String}
+                 */
+                $scope.requestUrl = '';
+
+                /**
+                 * @property requestHeaders
+                 * @type {Object}
+                 */
+                $scope.requestHeaders = {};
+
+                /**
+                 * @property listeners
+                 * @type {Object}
+                 */
+                $scope.listeners = {
+
+                    /**
+                     * Invoked once the HTTP request has been successfully completed.
+                     *
+                     * @method success
+                     * @param httpRequest {XMLHttpRequest}
+                     * @return {void}
+                     */
+                    success: function success(httpRequest) {
+
+                        httpRequest.upload.onload = function onLoad() {
+
+                            $scope.$apply(function apply() {
+
+                                $scope.forEachFile($scope.FILE_TYPES.VALID, function forEach(model) {
+
+                                    // Advance the status of the file to that of an uploaded file.
+                                    model.type = $scope.FILE_TYPES.UPLOADED;
+
+                                });
+
+                            });
+
+                        };
+
+                    }
+
+                };
+
+                /**
+                 * Utility method for iterating over files of a given type.
+                 *
+                 * @method forEachFile
+                 * @param type {Number}
+                 * @param callbackFn {Function}
+                 * @return {void}
+                 */
+                $scope.forEachFile = function forEachFile(type, callbackFn) {
+
+                    $angular.forEach($scope.filterFiles($scope.FILE_TYPES.VALID), function forEach(model) {
+                        callbackFn(model);
+                    });
+
+                };
 
                 /**
                  * @method registerFile
@@ -141,6 +203,79 @@
                 };
 
                 /**
+                 * @method uploadFiles
+                 * @return {void}
+                 */
+                $scope.uploadFiles = function uploadFiles() {
+
+                    var httpRequest = new $window.XMLHttpRequest(),
+                        formData    = new $window.FormData(),
+                        queuedFiles = $scope.filterFiles($scope.FILE_TYPES.VALID);
+
+                    // Initiate the HTTP request.
+                    httpRequest.open('post', $scope.requestUrl, true);
+
+                    // Iterate all of the valid files to append them to the previously created
+                    // `formData` object.
+                    $angular.forEach(queuedFiles, function forEach(model) {
+                        formData.append('file', model.file);
+                    });
+
+                    // Setup the file size of the request, and any other headers.
+                    httpRequest.setRequestHeader('X-File-Size', $scope.getRequestLength(queuedFiles));
+                    $scope.addRequestHeaders(httpRequest);
+
+                    // Configure the event listeners for the impending request.
+                    $scope.listeners.success(httpRequest);
+                    
+                    httpRequest.send(formData);
+
+                };
+
+                /**
+                 * Iterate over any additional headers added by the developer and append to the current
+                 * request being generated.
+                 *
+                 * @method addRequestHeaders
+                 * @param httpRequest {XMLHttpRequest}
+                 * @return {Array}
+                 */
+                $scope.addRequestHeaders = function addRequestHeaders(httpRequest) {
+
+                    for (var header in $scope.requestHeaders) {
+
+                        if ($scope.requestHeaders.hasOwnProperty(header)) {
+                            httpRequest.setRequestHeader(header, $scope.requestHeaders[header]);
+                        }
+
+                    }
+
+                    return Object.keys($scope.requestHeaders);
+
+                };
+
+                /**
+                 * Determine the size of the request based on the files preparing to be uploaded.
+                 *
+                 * @method getRequestLength
+                 * @param [files=[]] {Array}
+                 * @return {Number}
+                 * @private
+                 */
+                $scope.getRequestLength = function getRequestLength(files) {
+
+                    var size = 0;
+
+                    // Iterate over all of the files to determine the size of all valid files.
+                    $angular.forEach(files || $scope.filterFiles($scope.FILE_TYPES.VALID), function forEach(model) {
+                        size += model.file.size;
+                    });
+
+                    return size;
+
+                };
+
+                /**
                  * @method throwException
                  * @param message {String}
                  * @return {void}
@@ -171,6 +306,12 @@
                         FILE_TYPES: $scope.FILE_TYPES,
 
                         /**
+                         * @method uploadFiles
+                         * @return {void}
+                         */
+                        uploadFiles: $scope.uploadFiles,
+
+                        /**
                          * @method addFile
                          * @param file {File}
                          * @param type {Number}
@@ -178,6 +319,24 @@
                          */
                         addFile: function addFile(file, type) {
                             $scope.registerFile(file)(type || $scope.FILE_TYPES.VALID);
+                        },
+
+                        /**
+                         * @method setRequestUrl
+                         * @param url {String}
+                         * @return {void}
+                         */
+                        setRequestUrl: function setRequestUrl(url) {
+                            $scope.requestUrl = url;
+                        },
+
+                        /**
+                         * @method setRequestHeaders
+                         * @param headers {Object}
+                         * @return {void}
+                         */
+                        setRequestHeaders: function setRequestHeaders(headers) {
+                            $scope.requestHeaders = headers;
                         },
 
                         /**
