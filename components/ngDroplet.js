@@ -61,6 +61,12 @@
                 $scope.extensions = [];
 
                 /**
+                 * @property requestUrl
+                 * @type {String}
+                 */
+                $scope.requestUrl = '';
+
+                /**
                  * @method registerFile
                  * @param file {File}
                  * @return {Function}
@@ -151,7 +157,7 @@
                         queuedFiles = $scope.filterFiles($scope.FILE_TYPES.VALID);
 
                     // Initiate the HTTP request.
-                    httpRequest.open('post', 'http://www.google.com/', true);
+                    httpRequest.open('post', $scope.requestUrl, true);
 
                     // Iterate all of the valid files to append them to the previously created
                     // `formData` object.
@@ -161,6 +167,7 @@
 
                     // Setup the file size of the request.
                     httpRequest.setRequestHeader('X-File-Size', $scope.getRequestLength(queuedFiles));
+                    httpRequest.send(formData);
 
                 };
 
@@ -229,6 +236,15 @@
                          */
                         addFile: function addFile(file, type) {
                             $scope.registerFile(file)(type || $scope.FILE_TYPES.VALID);
+                        },
+
+                        /**
+                         * @method setUrl
+                         * @param url {String}
+                         * @return {void}
+                         */
+                        setUrl: function setUrl(url) {
+                            $scope.requestUrl = url;
                         },
 
                         /**

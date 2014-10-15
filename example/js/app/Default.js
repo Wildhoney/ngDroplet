@@ -13,6 +13,7 @@
         $scope.$on('$dropletReady', function whenDropletReady() {
 
             $scope.interface.allowedExtensions(['png', 'jpg', 'bmp', 'gif', 'svg', 'torrent']);
+            $scope.interface.setUrl('upload.html');
 
         });
 
