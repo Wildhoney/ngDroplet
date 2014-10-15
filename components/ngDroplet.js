@@ -141,6 +141,14 @@
                 };
 
                 /**
+                 * @method uploadFiles
+                 * @return {void}
+                 */
+                $scope.uploadFiles = function uploadFiles() {
+
+                };
+
+                /**
                  * @method throwException
                  * @param message {String}
                  * @return {void}
@@ -169,6 +177,12 @@
                          * @type {Object}
                          */
                         FILE_TYPES: $scope.FILE_TYPES,
+
+                        /**
+                         * @method uploadFiles
+                         * @return {void}
+                         */
+                        uploadFiles: $scope.uploadFiles,
 
                         /**
                          * @method addFile
