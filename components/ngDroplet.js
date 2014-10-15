@@ -146,15 +146,42 @@
                  */
                 $scope.uploadFiles = function uploadFiles() {
 
-                    var formData = new $window.FormData();
+                    var httpRequest = new $window.XMLHttpRequest(),
+                        formData    = new $window.FormData(),
+                        queuedFiles = $scope.filterFiles($scope.FILE_TYPES.VALID);
+
+                    // Initiate the HTTP request.
+                    httpRequest.open('post', 'http://www.google.com/', true);
 
                     // Iterate all of the valid files to append them to the previously created
                     // `formData` object.
-                    $angular.forEach($scope.filterFiles($scope.FILE_TYPES.VALID), function forEach(model) {
+                    $angular.forEach(queuedFiles, function forEach(model) {
                         formData.append('file', model.file);
                     });
 
-                    console.log(formData);
+                    // Setup the file size of the request.
+                    httpRequest.setRequestHeader('X-File-Size', $scope.getRequestLength(queuedFiles));
+
+                };
+
+                /**
+                 * Determine the size of the request based on the files preparing to be uploaded.
+                 *
+                 * @method getRequestLength
+                 * @param [files=[]] {Array}
+                 * @return {Number}
+                 * @private
+                 */
+                $scope.getRequestLength = function getRequestLength(files) {
+
+                    var size = 0;
+
+                    // Iterate over all of the files to determine the size of all valid files.
+                    $angular.forEach(files || $scope.filterFiles($scope.FILE_TYPES.VALID), function forEach(model) {
+                        size += model.file.size;
+                    });
+
+                    return size;
 
                 };
 
