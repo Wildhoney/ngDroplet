@@ -55,6 +55,14 @@
                 $scope.files = [];
 
                 /**
+                 * @property options
+                 * @type {Object}
+                 */
+                $scope.options = {
+                    disableXFileSize: false
+                };
+
+                /**
                  * @property extensions
                  * @type {Array}
                  */
@@ -221,8 +229,14 @@
                         formData.append('file', model.file);
                     });
 
-                    // Setup the file size of the request, and any other headers.
-                    httpRequest.setRequestHeader('X-File-Size', $scope.getRequestLength(queuedFiles));
+                    if (!$scope.options.disableXFileSize) {
+
+                        // Setup the file size of the request.
+                        httpRequest.setRequestHeader('X-File-Size', $scope.getRequestLength(queuedFiles));
+
+                    }
+
+                    // ...And any other additional HTTP request headers.
                     $scope.addRequestHeaders(httpRequest);
 
                     // Configure the event listeners for the impending request.
@@ -319,6 +333,14 @@
                          */
                         addFile: function addFile(file, type) {
                             $scope.registerFile(file)(type || $scope.FILE_TYPES.VALID);
+                        },
+
+                        /**
+                         * @method disableXFileSize
+                         * @return {void}
+                         */
+                        disableXFileSize: function disableXFileSize() {
+                            $scope.options.disableXFileSize = true;
                         },
 
                         /**
