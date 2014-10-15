@@ -67,6 +67,12 @@
                 $scope.requestUrl = '';
 
                 /**
+                 * @property requestHeaders
+                 * @type {Object}
+                 */
+                $scope.requestHeaders = {};
+
+                /**
                  * @method registerFile
                  * @param file {File}
                  * @return {Function}
@@ -165,9 +171,33 @@
                         formData.append('file', model.file);
                     });
 
-                    // Setup the file size of the request.
+                    // Setup the file size of the request, and any other headers.
                     httpRequest.setRequestHeader('X-File-Size', $scope.getRequestLength(queuedFiles));
+                    $scope.addRequestHeaders(httpRequest);
+                    
                     httpRequest.send(formData);
+
+                };
+
+                /**
+                 * Iterate over any additional headers added by the developer and append to the current
+                 * request being generated.
+                 *
+                 * @method addRequestHeaders
+                 * @param httpRequest {XMLHttpRequest}
+                 * @return {Array}
+                 */
+                $scope.addRequestHeaders = function addRequestHeaders(httpRequest) {
+
+                    for (var header in $scope.requestHeaders) {
+
+                        if ($scope.requestHeaders.hasOwnProperty(header)) {
+                            httpRequest.setRequestHeader(header, $scope.requestHeaders[header]);
+                        }
+
+                    }
+
+                    return Object.keys($scope.requestHeaders);
 
                 };
 
@@ -239,12 +269,21 @@
                         },
 
                         /**
-                         * @method setUrl
+                         * @method setRequestUrl
                          * @param url {String}
                          * @return {void}
                          */
-                        setUrl: function setUrl(url) {
+                        setRequestUrl: function setRequestUrl(url) {
                             $scope.requestUrl = url;
+                        },
+
+                        /**
+                         * @method setRequestHeaders
+                         * @param headers {Object}
+                         * @return {void}
+                         */
+                        setRequestHeaders: function setRequestHeaders(headers) {
+                            $scope.requestHeaders = headers;
                         },
 
                         /**
