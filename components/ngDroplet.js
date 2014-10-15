@@ -73,6 +73,56 @@
                 $scope.requestHeaders = {};
 
                 /**
+                 * @property listeners
+                 * @type {Object}
+                 */
+                $scope.listeners = {
+
+                    /**
+                     * Invoked once the HTTP request has been successfully completed.
+                     *
+                     * @method success
+                     * @param httpRequest {XMLHttpRequest}
+                     * @return {void}
+                     */
+                    success: function success(httpRequest) {
+
+                        httpRequest.upload.onload = function onLoad() {
+
+                            $scope.$apply(function apply() {
+
+                                $scope.forEachFile($scope.FILE_TYPES.VALID, function forEach(model) {
+
+                                    // Advance the status of the file to that of an uploaded file.
+                                    model.type = $scope.FILE_TYPES.UPLOADED;
+
+                                });
+
+                            });
+
+                        };
+
+                    }
+
+                };
+
+                /**
+                 * Utility method for iterating over files of a given type.
+                 *
+                 * @method forEachFile
+                 * @param type {Number}
+                 * @param callbackFn {Function}
+                 * @return {void}
+                 */
+                $scope.forEachFile = function forEachFile(type, callbackFn) {
+
+                    $angular.forEach($scope.filterFiles($scope.FILE_TYPES.VALID), function forEach(model) {
+                        callbackFn(model);
+                    });
+
+                };
+
+                /**
                  * @method registerFile
                  * @param file {File}
                  * @return {Function}
@@ -174,6 +224,9 @@
                     // Setup the file size of the request, and any other headers.
                     httpRequest.setRequestHeader('X-File-Size', $scope.getRequestLength(queuedFiles));
                     $scope.addRequestHeaders(httpRequest);
+
+                    // Configure the event listeners for the impending request.
+                    $scope.listeners.success(httpRequest);
                     
                     httpRequest.send(formData);
 
