@@ -59,7 +59,8 @@
                  * @type {Object}
                  */
                 $scope.options = {
-                    disableXFileSize: false
+                    disableXFileSize: false,
+                    useArray: true
                 };
 
                 /**
@@ -216,9 +217,10 @@
                  */
                 $scope.uploadFiles = function uploadFiles() {
 
-                    var httpRequest = new $window.XMLHttpRequest(),
-                        formData    = new $window.FormData(),
-                        queuedFiles = $scope.filterFiles($scope.FILE_TYPES.VALID);
+                    var httpRequest  = new $window.XMLHttpRequest(),
+                        formData     = new $window.FormData(),
+                        queuedFiles  = $scope.filterFiles($scope.FILE_TYPES.VALID),
+                        fileProperty = $scope.options.useArray ? 'file[]' : 'file';
 
                     // Initiate the HTTP request.
                     httpRequest.open('post', $scope.requestUrl, true);
@@ -226,7 +228,7 @@
                     // Iterate all of the valid files to append them to the previously created
                     // `formData` object.
                     $angular.forEach(queuedFiles, function forEach(model) {
-                        formData.append('file', model.file);
+                        formData.append(fileProperty, model.file);
                     });
 
                     if (!$scope.options.disableXFileSize) {
@@ -341,6 +343,15 @@
                          */
                         disableXFileSize: function disableXFileSize() {
                             $scope.options.disableXFileSize = true;
+                        },
+
+                        /**
+                         * @method useArray
+                         * @param value {Boolean}
+                         * @return {void}
+                         */
+                        useArray: function useArray(value) {
+                            $scope.options.useArray = !!value;
                         },
 
                         /**
