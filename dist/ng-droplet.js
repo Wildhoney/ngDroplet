@@ -81,6 +81,12 @@
                 $scope.requestUrl = '';
 
                 /**
+                 * @property requestProgress
+                 * @type {Object}
+                 */
+                $scope.requestProgress = { percent: 0, total: 0, loaded: 0 };
+
+                /**
                  * @property requestHeaders
                  * @type {Object}
                  */
@@ -113,6 +119,31 @@
                                 });
 
                             });
+
+                        };
+
+                    },
+
+                    /**
+                     * Invoked each time there's a progress update on the files being uploaded.
+                     *
+                     * @method progress
+                     * @param httpRequest {XMLHttpRequest}
+                     * @param requestLength {Number}
+                     * @return {void}
+                     */
+                    progress: function progress(httpRequest, requestLength) {
+
+                        httpRequest.upload.onprogress = function onProgress(event) {
+
+                            if (event.lengthComputable) {
+
+                                // Update the progress object.
+                                $scope.requestProgress.percent = Math.round((event.loaded / requestLength) * 100);
+                                $scope.requestProgress.loaded  = event.loaded;
+                                $scope.requestProgress.total   = requestLength;
+
+                            }
 
                         };
 
@@ -227,10 +258,11 @@
                  */
                 $scope.uploadFiles = function uploadFiles() {
 
-                    var httpRequest  = new $window.XMLHttpRequest(),
-                        formData     = new $window.FormData(),
-                        queuedFiles  = $scope.filterFiles($scope.FILE_TYPES.VALID),
-                        fileProperty = $scope.options.useArray ? 'file[]' : 'file';
+                    var httpRequest   = new $window.XMLHttpRequest(),
+                        formData      = new $window.FormData(),
+                        queuedFiles   = $scope.filterFiles($scope.FILE_TYPES.VALID),
+                        fileProperty  = $scope.options.useArray ? 'file[]' : 'file',
+                        requestLength = $scope.getRequestLength(queuedFiles);
 
                     /**
                      * @method setupRequestHeaders
@@ -244,7 +276,7 @@
                         if (!$scope.options.disableXFileSize) {
 
                             // Setup the file size of the request.
-                            httpRequest.setRequestHeader('X-File-Size', $scope.getRequestLength(queuedFiles));
+                            httpRequest.setRequestHeader('X-File-Size', requestLength);
 
                         }
 
@@ -261,6 +293,7 @@
 
                         // Configure the event listeners for the impending request.
                         $scope.listeners.success(httpRequest);
+                        $scope.listeners.progress(httpRequest, requestLength);
 
                     })();
 
@@ -353,6 +386,12 @@
                          * @return {void}
                          */
                         uploadFiles: $scope.uploadFiles,
+
+                        /**
+                         * @property progress
+                         * @type {Object}
+                         */
+                        progress: $scope.requestProgress,
 
                         /**
                          * @method addFile

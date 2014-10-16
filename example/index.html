@@ -25,6 +25,8 @@
         Invalid Files: {{interface.getFiles(interface.FILE_TYPES.INVALID).length}}
         Uploaded Files: {{interface.getFiles(interface.FILE_TYPES.UPLOADED).length}}
 
+        Progress: {{interface.progress}}
+
         <droplet ng-model="interface"></droplet>
 
         <input type="button" ng-click="interface.uploadFiles()" value="Upload Files" />
