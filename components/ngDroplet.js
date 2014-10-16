@@ -105,6 +105,12 @@
                 $scope.requestHeaders = {};
 
                 /**
+                 * @property requestPostData
+                 * @type {Object}
+                 */
+                $scope.requestPostData = {};
+
+                /**
                  * @property listeners
                  * @type {Object}
                  */
@@ -314,14 +320,14 @@
                         fileProperty  = $scope.options.useArray ? 'file[]' : 'file',
                         requestLength = $scope.getRequestLength(queuedFiles);
 
+                    // Initiate the HTTP request.
+                    httpRequest.open('post', $scope.requestUrl, true);
+
                     /**
-                     * @method setupRequestHeaders
+                     * @method appendCustomData
                      * @return {void}
                      */
-                    (function setupRequestHeaders() {
-
-                        // Initiate the HTTP request.
-                        httpRequest.open('post', $scope.requestUrl, true);
+                    (function appendCustomData() {
 
                         if (!$scope.options.disableXFileSize) {
 
@@ -330,8 +336,9 @@
 
                         }
 
-                        // ...And any other additional HTTP request headers.
+                        // ...And any other additional HTTP request headers, and POST data.
                         $scope.addRequestHeaders(httpRequest);
+                        $scope.addPostData(formData);
 
                     })();
 
@@ -379,6 +386,27 @@
                     }
 
                     return Object.keys($scope.requestHeaders);
+
+                };
+
+                /**
+                 * Iterate over any additional POST data that must be bundled with the request.
+                 *
+                 * @method addPostData
+                 * @param formData {FormData}
+                 * @return {Array}
+                 */
+                $scope.addPostData = function addPostData(formData) {
+
+                    for (var header in $scope.requestPostData) {
+
+                        if ($scope.requestPostData.hasOwnProperty(header)) {
+                            formData.append(header, $scope.requestHeaders[header]);
+                        }
+
+                    }
+
+                    return Object.keys($scope.requestPostData);
 
                 };
 
@@ -498,6 +526,15 @@
                          */
                         setRequestHeaders: function setRequestHeaders(headers) {
                             $scope.requestHeaders = headers;
+                        },
+
+                        /**
+                         * @method setPostData
+                         * @param data {Object}
+                         * @return {void}
+                         */
+                        setPostData: function setPostData(data) {
+                            $scope.requestPostData = data;
                         },
 
                         /**
