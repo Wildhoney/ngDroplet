@@ -16,12 +16,6 @@
             restrict: 'EA',
 
             /**
-             * @property template
-             * @type {String}
-             */
-            template: '<droplet-preview ng-repeat="file in filterFiles(FILE_TYPES.VALID)" ng-model="file"></droplet-preview>',
-
-            /**
              * @property require
              * @type {String}
              */
@@ -741,7 +735,7 @@
              * @property template
              * @type {String}
              */
-            template: '<section class="droplet-preview"><div class="extension-{{model.extension}}" ng-show="!model.isImage()"><label>{{model.file.name}}</label></div><img ng-show="model.isImage()" ng-src="{{imageData}}" class="droplet-preview" /><a ng-click="model.deleteFile()">Delete</a></section>',
+            template: '<img ng-show="model.isImage()" ng-src="{{imageData}}" class="droplet-preview" />',
 
             /**
              * @method link
