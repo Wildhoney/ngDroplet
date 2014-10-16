@@ -261,6 +261,14 @@
                          */
                         deleteFile: function deleteFile() {
                             $scope.deleteFile(this);
+                        },
+
+                        /**
+                         * @method isImage
+                         * @return {Boolean}
+                         */
+                        isImage: function isImage() {
+                            return !!this.file.type.match(/^image\//i);
                         }
 
                     };
@@ -733,25 +741,7 @@
              * @property template
              * @type {String}
              */
-            template: '<section class="droplet-preview"><div class="extension-{{model.extension}}" ng-show="!isImage(model.file)"><label>{{model.file.name}}</label></div><img ng-show="isImage(model.file)" ng-src="{{imageData}}" class="droplet-preview" /><a ng-click="model.deleteFile()">Delete</a></section>',
-
-            /**
-             * @method controller
-             * @param $scope {Object}
-             * @return {void}
-             */
-            controller: ['$scope', function controller($scope) {
-
-                /**
-                 * @method isImage
-                 * @param file {File}
-                 * @return {Boolean}
-                 */
-                $scope.isImage = function isImage(file) {
-                    return !!file.type.match(/^image\//i);
-                };
-
-            }],
+            template: '<section class="droplet-preview"><div class="extension-{{model.extension}}" ng-show="!model.isImage()"><label>{{model.file.name}}</label></div><img ng-show="model.isImage()" ng-src="{{imageData}}" class="droplet-preview" /><a ng-click="model.deleteFile()">Delete</a></section>',
 
             /**
              * @method link
@@ -784,7 +774,7 @@
 
                 };
 
-                if (scope.isImage(scope.model.file)) {
+                if (scope.model.isImage()) {
 
                     // Initialise the loading of the image into the file reader.
                     fileReader.readAsDataURL(scope.model.file);
