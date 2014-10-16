@@ -11,26 +11,74 @@
 
     <!-- Styles! -->
     <link rel="stylesheet" type="text/css" href="css/Default.css" />
+    <link href="http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic" rel="stylesheet" type="text/css">
 
     <!-- Application! -->
     <script type="text/javascript" src="js/app/Default.js"></script>
 
 </head>
-<body ng-app="dropletApp">
+<body ng-app="dropletApp" class="colourful">
 
-    <section class="droplet" ng-controller="IndexController">
+    <section class="container">
 
-        <h1>Upload Files ({{interface.getFiles().length}} in total)</h1>
+        <section class="droplet" ng-controller="IndexController">
 
-        Invalid Files: {{interface.getFiles(interface.FILE_TYPES.INVALID).length}}
-        Uploaded Files: {{interface.getFiles(interface.FILE_TYPES.UPLOADED).length}}
-        Deleted Files: {{interface.getFiles(interface.FILE_TYPES.DELETED).length}}
+            <h1><a target="_blank" href=https://github.com/Wildhoney/ngDroplet">ngDroplet</a></h1>
 
-        <comment ng-show="interface.isUploading">Progress: {{interface.progress}}</comment>
+            <ul class="statistics">
+                <li><label>Valid:</label> {{interface.getFiles(interface.FILE_TYPES.VALID).length}}</li>
+                <li><label>Invalid:</label> {{interface.getFiles(interface.FILE_TYPES.INVALID).length}}</li>
+                <li><label>Uploaded:</label> {{interface.getFiles(interface.FILE_TYPES.UPLOADED).length}}</li>
+                <li><label>Deleted:</label> {{interface.getFiles(interface.FILE_TYPES.DELETED).length}}</li>
+                <li><label>Total:</label> {{interface.getFiles().length}}</li>
+            </ul>
 
-        <droplet ng-model="interface"></droplet>
+            <section class="toolbar">
 
-        <input type="button" ng-click="interface.uploadFiles()" value="Upload Files" />
+                <input type="button" class="upload-files" value="Upload Files"
+                       ng-click="interface.uploadFiles()"
+                       ng-class="{ clickable: interface.isReady() }" />
+
+                <comment class="progress" ng-show="interface.isUploading">
+                    Uploaded: <span>{{interface.progress.percent}}%</span>
+                </comment>
+
+            </section>
+
+            <droplet ng-model="interface">
+
+                <comment></comment>
+
+                <ul class="files">
+
+                    <li ng-repeat="model in interface.getFiles(interface.FILE_TYPES.VALID)">
+
+                        <div class="container">
+
+                            <div class="card">
+
+                                <figure class="front">
+                                    <droplet-preview ng-model="model"></droplet-preview>
+                                </figure>
+
+                                <figure class="back">
+                                    <div><label>Size:</label> {{model.file.size / 1024 / 1024 | number: 2}}MB</div>
+                                    <div><label>MIME:</label> {{model.mimeType}}</div>
+                                    <div><label>Extension:</label> {{model.extension}}</div>
+                                    <div><a class="delete" ng-click="model.deleteFile()">Delete File</a></div>
+                                </figure>
+
+                            </div>
+
+                        </div>
+
+                    </li>
+
+                </ul>
+
+            </droplet>
+
+        </section>
 
     </section>
 

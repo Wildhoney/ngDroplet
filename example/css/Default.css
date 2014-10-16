@@ -4,20 +4,233 @@
     box-sizing: border-box;
 }
 
-section.droplet {
-    border: 1px solid red;
+body {
+    padding: 50px;
+    text-align: center;
+    height: 100%;
 }
 
-section.droplet droplet {
-    border: 1px solid green;
-    width: 500px;
-    height: 350px;
-    display: inline-block;
+body, html {
+    height: 100%;
 }
 
-section.droplet droplet section.droplet-preview img {
-    width: 100px;
-    height: 100px;
+.colourful {
+    background:
+        -webkit-linear-gradient(45deg, hsla(332, 18%, 55%, 1) 0%, hsla(332, 18%, 55%, 0) 70%),
+        -webkit-linear-gradient(315deg, hsla(290, 22%, 50%, 1) 10%, hsla(290, 22%, 50%, 0) 80%),
+        -webkit-linear-gradient(225deg, hsla(342, 27%, 50%, 1) 10%, hsla(342, 27%, 50%, 0) 80%),
+        -webkit-linear-gradient(135deg, hsla(169, 0%, 100%, 1) 100%, hsla(169, 0%, 100%, 0) 70%);
+    background:
+        linear-gradient(45deg, hsla(332, 18%, 55%, 1) 0%, hsla(332, 18%, 55%, 0) 70%),
+        linear-gradient(135deg, hsla(290, 22%, 50%, 1) 10%, hsla(290, 22%, 50%, 0) 80%),
+        linear-gradient(225deg, hsla(342, 27%, 50%, 1) 10%, hsla(342, 27%, 50%, 0) 80%),
+        linear-gradient(315deg, hsla(169, 0%, 100%, 1) 100%, hsla(169, 0%, 100%, 0) 70%);
+}
+
+section.container {
+    text-align: left;
+    width: 670px;
+    margin: auto;
+}
+
+section.container section.droplet h1 a {
+    font-family: Lato, Arial, Tahoma, Helvetica, sans-serif;
+    color: white;
+    text-decoration: none;
+    font-weight: normal;
+    font-size: 40px;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, .25);
+}
+
+section.container section.droplet ul.statistics {
+    list-style-type: none;
+    overflow: hidden;
+}
+
+section.container section.droplet ul.statistics li {
     float: left;
     overflow: hidden;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, .15);
+    margin: 10px 5px 10px 0;
+    color: white;
+    font-family: Times New Roman, Times, serif;
+    font-size: 11px;
+    font-style: italic;
+    padding: 1px;
+    display: inline-block;
+    border-radius: 2px;
+}
+
+section.container section.droplet ul.statistics li label {
+    color: rgba(255, 255, 255, .5);
+}
+
+section.container section.droplet droplet {
+    display: inline-block;
+    position: relative;
+    border-radius: 2px;
+    width: 100%;
+    height: 350px;
+    background-color: rgba(255, 255, 255, .1);
+}
+
+section.container section.droplet droplet comment:after {
+    content: "Drag File...";
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    display: inline-block;
+    position: absolute;
+    z-index: -1;
+    font-family: Lato, Arial, Tahoma, Helvetica, sans-serif;
+    color: rgba(255, 255, 255, .45);
+    text-decoration: none;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 350px;
+    text-align: center;
+}
+
+section.container section.droplet droplet:hover comment:after {
+    content: "...And Drop!";
+}
+
+section.container section.droplet droplet ul.files {
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+    padding: 5px;
+    list-style-type: none;
+}
+
+section.container section.droplet droplet ul.files li {
+    width: 100px;
+    height: 100px;
+    padding: 1px;
+    float: left;
+    position: relative;
+    margin: 5px;
+}
+
+section.container section.droplet droplet ul.files li img {
+    width: 96px;
+}
+
+section.container section.droplet droplet ul.files li div.container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    perspective: 800px;
+}
+
+section.container section.droplet droplet ul.files li div.container div.card {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    position: absolute;
+    transform-style: preserve-3d;
+    transition: transform 1s;
+    transform-origin: left center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .25);
+}
+
+section.container section.droplet droplet ul.files li:hover div.container div.card {
+    transform: translateX(100%) rotateY(-180deg);
+}
+
+section.container section.droplet droplet ul.files li div.container div.card figure {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    background-color: white;
+    border: 1px solid white;
+}
+
+section.container section.droplet droplet ul.files li div.container div.card figure.back {
+    transform: rotateY(180deg);
+}
+
+section.container section.droplet droplet ul.files li div.container div.card figure.back div {
+    display: inline-block;
+    padding: 3px 5px;
+    color: rgba(0, 0, 0, .5);
+    border-bottom: 1px solid rgba(0, 0, 0, .05);
+    width: 100%;
+    font-family: Lato, Arial, Tahoma Helvetica, sans-serif;
+    font-size: 10px;
+}
+
+section.container section.droplet droplet ul.files li div.container div.card figure.back div:last-of-type {
+    border-bottom: 0;
+}
+
+section.container section.droplet droplet ul.files li div.container div.card figure.back div label {
+    color: rgba(0, 0, 0, .25);
+}
+
+section.container section.droplet droplet ul.files li div.container div.card figure.back div a {
+    cursor: pointer;
+    padding-top: 9px;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+    color: dodgerblue;
+    transition: color 0.25s;
+}
+
+section.container section.droplet droplet ul.files li div.container div.card figure.back div a:hover {
+    color: black;
+}
+
+section.container section.droplet section.toolbar {
+    margin-top: 5px;
+    overflow: hidden;
+    height: 25px;
+    border-radius: 3px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, .25);
+    background: linear-gradient(to bottom, #ededed 0%, #dedede 100%);
+}
+
+section.container section.droplet section.toolbar input.upload-files {
+    float: left;
+    overflow: hidden;
+    background-color: transparent;
+    width: 100px;
+    height: 100%;
+    border: 0;
+    cursor: pointer;
+    border-right: 1px solid rgba(0, 0, 0, .1);
+    transition: background-color 0.25s;
+    outline: none;
+    pointer-events: none;
+    color: rgba(0, 0, 0, .15);
+    transition: all 0.25s;
+}
+
+section.container section.droplet section.toolbar input.upload-files:hover {
+    background-color: rgba(0, 0, 0, .1);
+}
+
+section.container section.droplet section.toolbar input.upload-files.clickable {
+    pointer-events: all;
+    color: rgba(0, 0, 0, .75);
+}
+
+section.container section.droplet section.toolbar comment.progress {
+    display: inline-block;
+    height: 25px;
+    line-height: 25px;
+    float: right;
+    overflow: hidden;
+    font-family: Times New Roman, Times, serif;
+    font-style: italic;
+    color: rgba(0, 0, 0, .45);
+    font-size: 11px;
+    padding: 0 8px;
+}
+
+section.container section.droplet section.toolbar comment.progress span {
+    font-weight: bold;
 }
