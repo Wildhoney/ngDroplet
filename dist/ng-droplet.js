@@ -16,12 +16,6 @@
             restrict: 'EA',
 
             /**
-             * @property template
-             * @type {String}
-             */
-            template: '<droplet-preview ng-repeat="file in filterFiles(FILE_TYPES.VALID)" ng-model="file"></droplet-preview>',
-
-            /**
              * @property require
              * @type {String}
              */
@@ -261,6 +255,14 @@
                          */
                         deleteFile: function deleteFile() {
                             $scope.deleteFile(this);
+                        },
+
+                        /**
+                         * @method isImage
+                         * @return {Boolean}
+                         */
+                        isImage: function isImage() {
+                            return !!this.file.type.match(/^image\//i);
                         }
 
                     };
@@ -566,6 +568,16 @@
                         isError: $scope.isError,
 
                         /**
+                         * Determines if there are files ready and waiting to be uploaded.
+                         *
+                         * @method isReady
+                         * @return {Boolean}
+                         */
+                        isReady: function isReady() {
+                            return !!$scope.filterFiles($scope.FILE_TYPES.VALID).length;
+                        },
+
+                        /**
                          * @method addFile
                          * @param file {File}
                          * @param type {Number}
@@ -733,25 +745,7 @@
              * @property template
              * @type {String}
              */
-            template: '<section class="droplet-preview"><div class="extension-{{model.extension}}" ng-show="!isImage(model.file)"><label>{{model.file.name}}</label></div><img ng-show="isImage(model.file)" ng-src="{{imageData}}" class="droplet-preview" /><a ng-click="model.deleteFile()">Delete</a></section>',
-
-            /**
-             * @method controller
-             * @param $scope {Object}
-             * @return {void}
-             */
-            controller: ['$scope', function controller($scope) {
-
-                /**
-                 * @method isImage
-                 * @param file {File}
-                 * @return {Boolean}
-                 */
-                $scope.isImage = function isImage(file) {
-                    return !!file.type.match(/^image\//i);
-                };
-
-            }],
+            template: '<img ng-show="model.isImage()" ng-src="{{imageData}}" class="droplet-preview" />',
 
             /**
              * @method link
@@ -784,7 +778,7 @@
 
                 };
 
-                if (scope.isImage(scope.model.file)) {
+                if (scope.model.isImage()) {
 
                     // Initialise the loading of the image into the file reader.
                     fileReader.readAsDataURL(scope.model.file);
