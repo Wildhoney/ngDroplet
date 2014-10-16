@@ -7,11 +7,6 @@
 
     function DropletDirective($rootScope, $window, $timeout) {
 
-        /**
-         * @constructor
-         */
-        var DropletModel = function DropletModel() {};
-
         return {
 
             /**
@@ -269,6 +264,14 @@
                     var model = { file: file, type: type, date: new $window.Date(), mimeType: file.type,
                                   extension: $scope.getExtension(file) };
 
+                    /**
+                     * @method deleteFile
+                     * @return {void}
+                     */
+                    model.deleteFile = function deleteFile() {
+                        $scope.deleteFile(model);
+                    };
+
                     $scope.files.push(model);
                     return model;
 
@@ -279,11 +282,9 @@
                  * @param model {Object}
                  * @return {void}
                  */
-//                $scope.deleteFile = function deleteFile(model) {
-//
-//
-//
-//                };
+                $scope.deleteFile = function deleteFile(model) {
+                    model.type = $scope.FILE_TYPES.DELETED;
+                };
 
                 /**
                  * @method filterFiles
@@ -687,7 +688,7 @@
              * @property template
              * @type {String}
              */
-            template: '<section class="droplet-preview"><div class="extension-{{model.extension}}" ng-show="!isImage(model.file)"><label>{{model.file.name}}</label></div><img ng-show="isImage(model.file)" ng-src="{{imageData}}" class="droplet-preview" /></section>',
+            template: '<section class="droplet-preview"><div class="extension-{{model.extension}}" ng-show="!isImage(model.file)"><label>{{model.file.name}}</label></div><img ng-show="isImage(model.file)" ng-src="{{imageData}}" class="droplet-preview" /><a ng-click="model.deleteFile()">Delete</a></section>',
 
             /**
              * @method controller
