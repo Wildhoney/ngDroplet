@@ -4,7 +4,6 @@
 
     var express        = require('express'),
         app            = express(),
-        fileSystem     = require('fs'),
         server         = require('http').createServer(app),
         multer         = require('multer');
 
