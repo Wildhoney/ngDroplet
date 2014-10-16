@@ -60,6 +60,12 @@
                 $scope.files = [];
 
                 /**
+                 * @property isUploading
+                 * @type {Boolean}
+                 */
+                $scope.isUploading = false;
+
+                /**
                  * @property options
                  * @type {Object}
                  */
@@ -107,6 +113,9 @@
                      */
                     success: function success(httpRequest) {
 
+                        $scope.progress  = { percent: 0, total: 0, loaded: 0 };
+                        $scope.isUploading = false;
+
                         httpRequest.upload.onload = function onLoad() {
 
                             $scope.$apply(function apply() {
@@ -136,14 +145,18 @@
 
                         httpRequest.upload.onprogress = function onProgress(event) {
 
-                            if (event.lengthComputable) {
+                            $scope.$apply(function apply() {
 
-                                // Update the progress object.
-                                $scope.requestProgress.percent = Math.round((event.loaded / requestLength) * 100);
-                                $scope.requestProgress.loaded  = event.loaded;
-                                $scope.requestProgress.total   = requestLength;
+                                if (event.lengthComputable) {
 
-                            }
+                                    // Update the progress object.
+                                    $scope.requestProgress.percent = Math.round((event.loaded / requestLength) * 100);
+                                    $scope.requestProgress.loaded  = event.loaded;
+                                    $scope.requestProgress.total   = requestLength;
+
+                                }
+
+                            });
 
                         };
 
@@ -304,6 +317,7 @@
                     });
 
                     // Voila...
+                    $scope.isUploading = true;
                     httpRequest.send(formData);
 
                 };
@@ -392,6 +406,12 @@
                          * @type {Object}
                          */
                         progress: $scope.requestProgress,
+
+                        /**
+                         * @property isUploading
+                         * @type {Object}
+                         */
+                        isUploading: $scope.isUploading,
 
                         /**
                          * @method addFile
