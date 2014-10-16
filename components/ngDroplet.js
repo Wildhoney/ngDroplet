@@ -66,6 +66,12 @@
                 $scope.isUploading = false;
 
                 /**
+                 * @property isError
+                 * @type {Boolean}
+                 */
+                $scope.isError = false;
+
+                /**
                  * @property options
                  * @type {Object}
                  */
@@ -113,8 +119,7 @@
                      */
                     success: function success(httpRequest) {
 
-                        $scope.progress  = { percent: 0, total: 0, loaded: 0 };
-                        $scope.isUploading = false;
+                        $scope.finishedUploading();
 
                         httpRequest.upload.onload = function onLoad() {
 
@@ -130,6 +135,24 @@
                             });
 
                         };
+
+                    },
+
+                    /**
+                     * Invoked when an error is thrown when uploading the files.
+                     *
+                     * @method error
+                     * @param httpRequest {XMLHttpRequest}
+                     * @return {void}
+                     */
+                    error: function error(httpRequest) {
+
+                        $scope.$apply(function apply() {
+
+                            $scope.finishedUploading();
+                            $scope.isError = true;
+
+                        });
 
                     },
 
@@ -161,6 +184,17 @@
                         };
 
                     }
+
+                };
+
+                /**
+                 * @method finishedUploading
+                 * @return {void}
+                 */
+                $scope.finishedUploading = function finishedUploading() {
+
+                    $scope.progress    = { percent: 0, total: 0, loaded: 0 };
+                    $scope.isUploading = false;
 
                 };
 
@@ -271,6 +305,9 @@
                  */
                 $scope.uploadFiles = function uploadFiles() {
 
+                    // Reset...
+                    $scope.isError = false;
+
                     var httpRequest   = new $window.XMLHttpRequest(),
                         formData      = new $window.FormData(),
                         queuedFiles   = $scope.filterFiles($scope.FILE_TYPES.VALID),
@@ -307,6 +344,7 @@
                         // Configure the event listeners for the impending request.
                         $scope.listeners.success(httpRequest);
                         $scope.listeners.progress(httpRequest, requestLength);
+                        $scope.listeners.error(httpRequest);
 
                     })();
 
@@ -412,6 +450,12 @@
                          * @type {Object}
                          */
                         isUploading: $scope.isUploading,
+
+                        /**
+                         * @property isError
+                         * @type {Object}
+                         */
+                        isError: $scope.isError,
 
                         /**
                          * @method addFile
