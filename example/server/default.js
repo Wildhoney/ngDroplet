@@ -12,7 +12,10 @@
 
     // Responsible for handling the file upload.
     app.post('/upload.html', function(request, response) {
-        response.status(200).send();
+
+        var count = request.files.file.length;
+        response.status(200).send(JSON.stringify({ success: true, fileCount: count }));
+
     });
 
     server.listen($process.env.PORT || 3507);

@@ -145,6 +145,35 @@
                     },
 
                     /**
+                     * Invoked once everything has been uploaded.
+                     *
+                     * @method finish
+                     * @param httpRequest {XMLHttpRequest}
+                     * @param uploadedFiles {Array}
+                     * @return {void}
+                     */
+                    finish: function finish(httpRequest, uploadedFiles) {
+
+                        httpRequest.onreadystatechange = function onReadyStateChange() {
+
+                            if (httpRequest.readyState === 4 && httpRequest.status !== 0) {
+
+                                $scope.$apply(function apply() {
+
+                                    // Parse the response, and then emit the event passing along the response
+                                    // and the uploaded files!
+                                    var response = $window.JSON.parse(httpRequest.responseText);
+                                    $rootScope.$broadcast('$dropletUploaded', response, uploadedFiles);
+
+                                });
+
+                            }
+
+                        };
+
+                    },
+
+                    /**
                      * Invoked when an error is thrown when uploading the files.
                      *
                      * @method error
@@ -153,12 +182,16 @@
                      */
                     error: function error(httpRequest) {
 
-                        $scope.$apply(function apply() {
+                        httpRequest.upload.onerror = function onError() {
 
-                            $scope.finishedUploading();
-                            $scope.isError = true;
+                            $scope.$apply(function apply() {
 
-                        });
+                                $scope.finishedUploading();
+                                $scope.isError = true;
+
+                            });
+
+                        };
 
                     },
 
@@ -349,6 +382,7 @@
                     (function attachEventListeners() {
 
                         // Configure the event listeners for the impending request.
+                        $scope.listeners.finish(httpRequest, queuedFiles);
                         $scope.listeners.success(httpRequest);
                         $scope.listeners.progress(httpRequest, requestLength);
                         $scope.listeners.error(httpRequest);

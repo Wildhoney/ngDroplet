@@ -105,6 +105,12 @@
                 $scope.requestHeaders = {};
 
                 /**
+                 * @property requestPostData
+                 * @type {Object}
+                 */
+                $scope.requestPostData = {};
+
+                /**
                  * @property listeners
                  * @type {Object}
                  */
@@ -139,6 +145,35 @@
                     },
 
                     /**
+                     * Invoked once everything has been uploaded.
+                     *
+                     * @method finish
+                     * @param httpRequest {XMLHttpRequest}
+                     * @param uploadedFiles {Array}
+                     * @return {void}
+                     */
+                    finish: function finish(httpRequest, uploadedFiles) {
+
+                        httpRequest.onreadystatechange = function onReadyStateChange() {
+
+                            if (httpRequest.readyState === 4 && httpRequest.status !== 0) {
+
+                                $scope.$apply(function apply() {
+
+                                    // Parse the response, and then emit the event passing along the response
+                                    // and the uploaded files!
+                                    var response = $window.JSON.parse(httpRequest.responseText);
+                                    $rootScope.$broadcast('$dropletUploaded', response, uploadedFiles);
+
+                                });
+
+                            }
+
+                        };
+
+                    },
+
+                    /**
                      * Invoked when an error is thrown when uploading the files.
                      *
                      * @method error
@@ -147,12 +182,16 @@
                      */
                     error: function error(httpRequest) {
 
-                        $scope.$apply(function apply() {
+                        httpRequest.upload.onerror = function onError() {
 
-                            $scope.finishedUploading();
-                            $scope.isError = true;
+                            $scope.$apply(function apply() {
 
-                        });
+                                $scope.finishedUploading();
+                                $scope.isError = true;
+
+                            });
+
+                        };
 
                     },
 
@@ -314,14 +353,14 @@
                         fileProperty  = $scope.options.useArray ? 'file[]' : 'file',
                         requestLength = $scope.getRequestLength(queuedFiles);
 
+                    // Initiate the HTTP request.
+                    httpRequest.open('post', $scope.requestUrl, true);
+
                     /**
-                     * @method setupRequestHeaders
+                     * @method appendCustomData
                      * @return {void}
                      */
-                    (function setupRequestHeaders() {
-
-                        // Initiate the HTTP request.
-                        httpRequest.open('post', $scope.requestUrl, true);
+                    (function appendCustomData() {
 
                         if (!$scope.options.disableXFileSize) {
 
@@ -330,8 +369,9 @@
 
                         }
 
-                        // ...And any other additional HTTP request headers.
+                        // ...And any other additional HTTP request headers, and POST data.
                         $scope.addRequestHeaders(httpRequest);
+                        $scope.addPostData(formData);
 
                     })();
 
@@ -342,6 +382,7 @@
                     (function attachEventListeners() {
 
                         // Configure the event listeners for the impending request.
+                        $scope.listeners.finish(httpRequest, queuedFiles);
                         $scope.listeners.success(httpRequest);
                         $scope.listeners.progress(httpRequest, requestLength);
                         $scope.listeners.error(httpRequest);
@@ -379,6 +420,27 @@
                     }
 
                     return Object.keys($scope.requestHeaders);
+
+                };
+
+                /**
+                 * Iterate over any additional POST data that must be bundled with the request.
+                 *
+                 * @method addPostData
+                 * @param formData {FormData}
+                 * @return {Array}
+                 */
+                $scope.addPostData = function addPostData(formData) {
+
+                    for (var header in $scope.requestPostData) {
+
+                        if ($scope.requestPostData.hasOwnProperty(header)) {
+                            formData.append(header, $scope.requestHeaders[header]);
+                        }
+
+                    }
+
+                    return Object.keys($scope.requestPostData);
 
                 };
 
@@ -498,6 +560,15 @@
                          */
                         setRequestHeaders: function setRequestHeaders(headers) {
                             $scope.requestHeaders = headers;
+                        },
+
+                        /**
+                         * @method setPostData
+                         * @param data {Object}
+                         * @return {void}
+                         */
+                        setPostData: function setPostData(data) {
+                            $scope.requestPostData = data;
                         },
 
                         /**
