@@ -222,6 +222,52 @@
                 };
 
                 /**
+                 * @method createModelBlueprint
+                 * @return {void}
+                 */
+                (function createModelBlueprint() {
+
+                    /**
+                     * @model DropletModel
+                     * @constructor
+                     */
+                    $scope.DropletModel = function DropletModel() {};
+
+                    /**
+                     * @property prototype
+                     * @type {Object}
+                     */
+                    $scope.DropletModel.prototype = {
+
+                        /**
+                         * @method file
+                         * @param file {File}
+                         * @param type {Number}
+                         * @return {void}
+                         */
+                        load: function load(file, type) {
+
+                            this.file      = file;
+                            this.type      = type;
+                            this.date      = new $window.Date();
+                            this.mimeType  = file.type;
+                            this.extension = $scope.getExtension(file);
+
+                        },
+
+                        /**
+                         * @method deleteFile
+                         * @return {void}
+                         */
+                        deleteFile: function deleteFile() {
+                            $scope.deleteFile(this);
+                        }
+
+                    };
+
+                })();
+
+                /**
                  * @method finishedUploading
                  * @return {void}
                  */
@@ -261,16 +307,8 @@
                     type = type || $scope.FILE_TYPES.VALID;
 
                     // Create the model and then register the file.
-                    var model = { file: file, type: type, date: new $window.Date(), mimeType: file.type,
-                                  extension: $scope.getExtension(file) };
-
-                    /**
-                     * @method deleteFile
-                     * @return {void}
-                     */
-                    model.deleteFile = function deleteFile() {
-                        $scope.deleteFile(model);
-                    };
+                    var model = new $scope.DropletModel();
+                    model.load(file, type);
 
                     $scope.files.push(model);
                     return model;
@@ -279,11 +317,18 @@
 
                 /**
                  * @method deleteFile
+                 * @throws Exception
                  * @param model {Object}
                  * @return {void}
                  */
                 $scope.deleteFile = function deleteFile(model) {
+
+                    if (!(model instanceof $scope.DropletModel)) {
+                        $scope.throwException('Method expects an instance of DropletModel');
+                    }
+
                     model.type = $scope.FILE_TYPES.DELETED;
+
                 };
 
                 /**
