@@ -14,6 +14,7 @@
 
             $scope.interface.allowedExtensions(['png', 'jpg', 'bmp', 'gif', 'svg', 'torrent']);
             $scope.interface.setRequestUrl('upload.html');
+            $scope.interface.useArray(false);
 
         });
 

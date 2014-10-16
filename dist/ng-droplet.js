@@ -7,6 +7,11 @@
 
     function DropletDirective($rootScope, $window, $timeout) {
 
+        /**
+         * @constructor
+         */
+        var DropletModel = function DropletModel() {};
+
         return {
 
             /**
@@ -125,38 +130,43 @@
                  */
                 $scope.forEachFile = function forEachFile(type, callbackFn) {
 
-                    $angular.forEach($scope.filterFiles($scope.FILE_TYPES.VALID), function forEach(model) {
+                    $angular.forEach($scope.filterFiles(type || $scope.FILE_TYPES.VALID), function forEach(model) {
                         callbackFn(model);
                     });
 
                 };
 
                 /**
-                 * @method registerFile
+                 * @method addFile
                  * @param file {File}
-                 * @return {Function}
+                 * @param type {Number}
+                 * @return {Object}
                  */
-                $scope.registerFile = function registerFile(file) {
+                $scope.addFile = function addFile(file, type) {
 
-                    /**
-                     * @method registerFileType
-                     * @param type {Number}
-                     * @return {void}
-                     */
-                    return function registerFileType(type) {
+                    // If the developer didn't specify the type then we'll assume it's a valid file
+                    // that they're adding.
+                    type = type || $scope.FILE_TYPES.VALID;
 
-                        // If the developer didn't specify the type then we'll assume it's a valid file
-                        // that they're adding.
-                        type = type || $scope.FILE_TYPES.VALID;
+                    // Create the model and then register the file.
+                    var model = { file: file, type: type, date: new $window.Date(), mimeType: file.type,
+                                  extension: $scope.getExtension(file) };
 
-                        // Create the model and then register the file.
-                        var model = { file: file, type: type, added: new $window.Date(), mimeType: file.type,
-                                      extension: $scope.getExtension(file) };
-                        $scope.files.push(model);
-
-                    }
+                    $scope.files.push(model);
+                    return model;
 
                 };
+
+                /**
+                 * @method deleteFile
+                 * @param model {Object}
+                 * @return {void}
+                 */
+//                $scope.deleteFile = function deleteFile(model) {
+//
+//
+//
+//                };
 
                 /**
                  * @method filterFiles
@@ -203,7 +213,7 @@
                             }
 
                             // Finally we'll register the file using the type that has been deduced.
-                            $scope.registerFile(file)(type);
+                            $scope.addFile(file, type);
 
                         }
 
@@ -222,8 +232,37 @@
                         queuedFiles  = $scope.filterFiles($scope.FILE_TYPES.VALID),
                         fileProperty = $scope.options.useArray ? 'file[]' : 'file';
 
-                    // Initiate the HTTP request.
-                    httpRequest.open('post', $scope.requestUrl, true);
+                    /**
+                     * @method setupRequestHeaders
+                     * @return {void}
+                     */
+                    (function setupRequestHeaders() {
+
+                        // Initiate the HTTP request.
+                        httpRequest.open('post', $scope.requestUrl, true);
+
+                        if (!$scope.options.disableXFileSize) {
+
+                            // Setup the file size of the request.
+                            httpRequest.setRequestHeader('X-File-Size', $scope.getRequestLength(queuedFiles));
+
+                        }
+
+                        // ...And any other additional HTTP request headers.
+                        $scope.addRequestHeaders(httpRequest);
+
+                    })();
+
+                    /**
+                     * @method attachEventListeners
+                     * @return {void}
+                     */
+                    (function attachEventListeners() {
+
+                        // Configure the event listeners for the impending request.
+                        $scope.listeners.success(httpRequest);
+
+                    })();
 
                     // Iterate all of the valid files to append them to the previously created
                     // `formData` object.
@@ -231,19 +270,7 @@
                         formData.append(fileProperty, model.file);
                     });
 
-                    if (!$scope.options.disableXFileSize) {
-
-                        // Setup the file size of the request.
-                        httpRequest.setRequestHeader('X-File-Size', $scope.getRequestLength(queuedFiles));
-
-                    }
-
-                    // ...And any other additional HTTP request headers.
-                    $scope.addRequestHeaders(httpRequest);
-
-                    // Configure the event listeners for the impending request.
-                    $scope.listeners.success(httpRequest);
-                    
+                    // Voila...
                     httpRequest.send(formData);
 
                 };
@@ -333,9 +360,7 @@
                          * @param type {Number}
                          * @return {void}
                          */
-                        addFile: function addFile(file, type) {
-                            $scope.registerFile(file)(type || $scope.FILE_TYPES.VALID);
-                        },
+                        addFile: $scope.addFile,
 
                         /**
                          * @method disableXFileSize

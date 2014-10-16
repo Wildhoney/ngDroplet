@@ -7,6 +7,11 @@
 
     function DropletDirective($rootScope, $window, $timeout) {
 
+        /**
+         * @constructor
+         */
+        var DropletModel = function DropletModel() {};
+
         return {
 
             /**
@@ -151,6 +156,17 @@
                     return model;
 
                 };
+
+                /**
+                 * @method deleteFile
+                 * @param model {Object}
+                 * @return {void}
+                 */
+//                $scope.deleteFile = function deleteFile(model) {
+//
+//
+//
+//                };
 
                 /**
                  * @method filterFiles
