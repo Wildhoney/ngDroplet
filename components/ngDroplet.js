@@ -568,6 +568,16 @@
                         isError: $scope.isError,
 
                         /**
+                         * Determines if there are files ready and waiting to be uploaded.
+                         *
+                         * @method isReady
+                         * @return {Boolean}
+                         */
+                        isReady: function isReady() {
+                            return !!$scope.filterFiles($scope.FILE_TYPES.VALID).length;
+                        },
+
+                        /**
                          * @method addFile
                          * @param file {File}
                          * @param type {Number}
