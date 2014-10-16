@@ -114,11 +114,11 @@
                      */
                     success: function success(httpRequest) {
 
-                        $scope.finishedUploading();
-
                         httpRequest.upload.onload = function onLoad() {
 
                             $scope.$apply(function apply() {
+
+                                $scope.finishedUploading();
 
                                 $scope.forEachFile($scope.FILE_TYPES.VALID, function forEach(model) {
 
@@ -197,6 +197,8 @@
                         httpRequest.upload.onprogress = function onProgress(event) {
 
                             $scope.$apply(function apply() {
+
+                                console.log(event.loaded);
 
                                 if (event.lengthComputable) {
 
@@ -556,10 +558,12 @@
                         progress: $scope.requestProgress,
 
                         /**
-                         * @property isUploading
-                         * @type {Object}
+                         * @method isUploading
+                         * @return {Boolean}
                          */
-                        isUploading: $scope.isUploading,
+                        isUploading: function() {
+                            return $scope.isUploading;
+                        },
 
                         /**
                          * @property isError
