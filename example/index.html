@@ -20,7 +20,7 @@
 
     <section class="container">
 
-        <section class="droplet" ng-controller="IndexController">
+        <section class="droplet" ng-controller="IndexController" ng-class="{ uploading: interface.isUploading() }">
 
             <h1><a target="_blank" href=https://github.com/Wildhoney/ngDroplet">ngDroplet</a></h1>
 
@@ -36,9 +36,12 @@
 
                 <input type="button" class="upload-files" value="Upload Files"
                        ng-click="interface.uploadFiles()"
+                       ng-hide="interface.isUploading()"
                        ng-class="{ clickable: interface.isReady() }" />
 
-                <comment class="progress" ng-show="interface.isUploading">
+                <input type="button" class="upload-files" value="Uploading..." ng-show="interface.isUploading()" />
+
+                <comment class="progress" ng-show="interface.isUploading()">
                     Uploaded: <span>{{interface.progress.percent}}%</span>
                 </comment>
 

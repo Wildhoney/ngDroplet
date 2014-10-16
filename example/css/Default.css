@@ -101,6 +101,12 @@ section.container section.droplet droplet ul.files {
     overflow-y: auto;
     padding: 5px;
     list-style-type: none;
+    transition: all .5s;
+}
+
+section.container section.droplet.uploading droplet ul.files {
+    opacity: .25;
+    pointer-events: none;
 }
 
 section.container section.droplet droplet ul.files li {
