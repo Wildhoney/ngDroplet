@@ -253,7 +253,7 @@ section.container section.droplet section.toolbar comment.progress {
     opacity: 0;
 }
 
-section.container section.droplet section.toolbar comment.progress:hover {
+section.container section.droplet section.toolbar comment.progress.visible {
     margin-top: 0;
     opacity: 1;
 }
