@@ -152,6 +152,7 @@ section.container section.droplet droplet ul.files li div.container div.card fig
     backface-visibility: hidden;
     background-color: white;
     border: 1px solid white;
+    overflow: hidden;
 }
 
 section.container section.droplet droplet ul.files li div.container div.card figure.back {
