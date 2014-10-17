@@ -3,9 +3,9 @@
     "use strict";
 
     // The truest wisdom is a resolute determination...
-    $angular.module('ngDroplet', []).directive('droplet', ['$rootScope', '$window', '$timeout',
+    $angular.module('ngDroplet', []).directive('droplet', ['$rootScope', '$window', '$timeout', '$q',
 
-    function DropletDirective($rootScope, $window, $timeout) {
+    function DropletDirective($rootScope, $window, $timeout, $q) {
 
         return {
 
@@ -106,6 +106,12 @@
                 $scope.listeners = {
 
                     /**
+                     * @property files
+                     * @type {Array}
+                     */
+                    files: [],
+
+                    /**
                      * Invoked once the HTTP request has been successfully completed.
                      *
                      * @method success
@@ -138,10 +144,9 @@
                      *
                      * @method finish
                      * @param httpRequest {XMLHttpRequest}
-                     * @param uploadedFiles {Array}
                      * @return {void}
                      */
-                    finish: function finish(httpRequest, uploadedFiles) {
+                    finish: function finish(httpRequest) {
 
                         httpRequest.onreadystatechange = function onReadyStateChange() {
 
@@ -152,13 +157,13 @@
                                     // Parse the response, and then emit the event passing along the response
                                     // and the uploaded files!
                                     var response = $window.JSON.parse(httpRequest.responseText);
-                                    $rootScope.$broadcast('$dropletUploaded', response, uploadedFiles);
+                                    $rootScope.$broadcast('$dropletUploaded', response, this.files);
 
                                 });
 
                             }
 
-                        };
+                        }.bind(this);
 
                     },
 
@@ -189,10 +194,11 @@
                      *
                      * @method progress
                      * @param httpRequest {XMLHttpRequest}
-                     * @param requestLength {Number}
                      * @return {void}
                      */
-                    progress: function progress(httpRequest, requestLength) {
+                    progress: function progress(httpRequest) {
+
+                        var requestLength = $scope.getRequestLength(this.files);
 
                         httpRequest.upload.onprogress = function onProgress(event) {
 
@@ -388,7 +394,7 @@
 
                 /**
                  * @method uploadFiles
-                 * @return {void}
+                 * @return {$q.promise}
                  */
                 $scope.uploadFiles = function uploadFiles() {
 
@@ -399,7 +405,8 @@
                         formData      = new $window.FormData(),
                         queuedFiles   = $scope.filterFiles($scope.FILE_TYPES.VALID),
                         fileProperty  = $scope.options.useArray ? 'file[]' : 'file',
-                        requestLength = $scope.getRequestLength(queuedFiles);
+                        requestLength = $scope.getRequestLength(queuedFiles),
+                        deferred      = $q.defer();
 
                     // Initiate the HTTP request.
                     httpRequest.open('post', $scope.requestUrl, true);
@@ -429,11 +436,14 @@
                      */
                     (function attachEventListeners() {
 
+                        // Define the files property so that each listener has the same interface.
+                        $scope.listeners.files = queuedFiles;
+
                         // Configure the event listeners for the impending request.
-                        $scope.listeners.finish(httpRequest, queuedFiles);
+                        $scope.listeners.progress(httpRequest);
                         $scope.listeners.success(httpRequest);
-                        $scope.listeners.progress(httpRequest, requestLength);
                         $scope.listeners.error(httpRequest);
+                        $scope.listeners.finish(httpRequest);
 
                     })();
 
@@ -446,6 +456,7 @@
                     // Voila...
                     $scope.isUploading = true;
                     httpRequest.send(formData);
+                    return deferred.promise;
 
                 };
 
@@ -498,7 +509,6 @@
                  * @method getRequestLength
                  * @param [files=[]] {Array}
                  * @return {Number}
-                 * @private
                  */
                 $scope.getRequestLength = function getRequestLength(files) {
 
