@@ -148,7 +148,7 @@
 
                         };
 
-                    }.bind(this),
+                    },
 
                     /**
                      * Invoked once everything has been uploaded.
