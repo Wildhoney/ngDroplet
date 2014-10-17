@@ -33,6 +33,11 @@ section.container {
     margin: auto;
 }
 
+section.container section.droplet {
+    position: relative;
+    overflow: hidden;
+}
+
 section.container section.droplet h1 a {
     font-family: Lato, Arial, Tahoma, Helvetica, sans-serif;
     color: white;
@@ -72,6 +77,8 @@ section.container section.droplet droplet {
     width: 100%;
     height: 350px;
     background-color: rgba(255, 255, 255, .1);
+    margin-top: -5px;
+    padding-top: 5px;
 }
 
 section.container section.droplet droplet comment:after {
@@ -240,4 +247,9 @@ section.container section.droplet section.toolbar comment.progress {
 
 section.container section.droplet section.toolbar comment.progress span {
     font-weight: bold;
+}
+
+section.container section.droplet input.droplet-multiple {
+    color: white;
+    margin-top: 5px;
 }
