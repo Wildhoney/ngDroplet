@@ -898,8 +898,8 @@
         };
 
         // Create the actual input elements.
-        createDirective('dropletUploadSingle', '<input type="file" />');
-        createDirective('dropletUploadMultiple', '<input type="file" multiple="multiple" />');
+        createDirective('dropletUploadSingle', '<inputclass="droplet-upload droplet-single" type="file" />');
+        createDirective('dropletUploadMultiple', '<input class="droplet-upload droplet-multiple" type="file" multiple="multiple" />');
 
     })();
 
