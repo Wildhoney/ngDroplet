@@ -3,7 +3,7 @@
     "use strict";
 
     // The truest wisdom is a resolute determination...
-    $angular.module('ngDroplet', []).directive('droplet', ['$rootScope', '$window', '$timeout', '$q',
+    var module = $angular.module('ngDroplet', []).directive('droplet', ['$rootScope', '$window', '$timeout', '$q',
 
     function DropletDirective($rootScope, $window, $timeout, $q) {
 
@@ -584,7 +584,7 @@
                          * @method isUploading
                          * @return {Boolean}
                          */
-                        isUploading: function() {
+                        isUploading: function isUploading() {
                             return $scope.isUploading;
                         },
 
@@ -613,6 +613,13 @@
                          * @return {void}
                          */
                         addFile: $scope.addFile,
+
+                        /**
+                         * @method traverseFiles
+                         * @param files {FileList}
+                         * @return {void}
+                         */
+                        traverseFiles: $scope.traverseFiles,
 
                         /**
                          * @method disableXFileSize
@@ -820,5 +827,80 @@
         }
 
     }]);
+
+    /**
+     * @method createInputElements
+     * @return {void}
+     */
+    (function createInputElements() {
+
+        /**
+         * @method createDirective
+         * @return {void}
+         */
+        var createDirective = function createDirective(name, htmlMarkup) {
+
+            module.directive(name, function DropletUploadSingleDirective() {
+
+                return {
+
+                    /**
+                     * @property restrict
+                     * @type {String}
+                     */
+                    restrict: 'EA',
+
+                    /**
+                     * @property require
+                     * @type {String}
+                     */
+                    require: 'ngModel',
+
+                    /**
+                     * @property replace
+                     * @type {Boolean}
+                     */
+                    replace: true,
+
+                    /**
+                     * @property processFileList
+                     * @type {String}
+                     */
+                    template: htmlMarkup,
+
+                    /**
+                     * @property scope
+                     * @type {Object}
+                     */
+                    scope: {
+                        interface: '=ngModel'
+                    },
+
+                    /**
+                     * @method link
+                     * @param scope {Object}
+                     * @param element {Object}
+                     * @return {void}
+                     */
+                    link: function link(scope, element) {
+
+                        // Subscribe to the "change" event.
+                        element.bind('change', function onChange() {
+                            scope.interface.traverseFiles(element[0].files);
+                        });
+
+                    }
+
+                }
+
+            });
+
+        };
+
+        // Create the actual input elements.
+        createDirective('dropletUploadSingle', '<input type="file" />');
+        createDirective('dropletUploadMultiple', '<input type="file" multiple="multiple" />');
+
+    })();
 
 })(window.angular);
