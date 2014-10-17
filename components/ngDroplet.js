@@ -112,15 +112,26 @@
                     files: [],
 
                     /**
+                     * @property httpRequest
+                     * @type {XMLHttpRequest}
+                     */
+                    httpRequest: {},
+
+                    /**
+                     * @property deferred
+                     * @type {$q.defer}
+                     */
+                    deferred: {},
+
+                    /**
                      * Invoked once the HTTP request has been successfully completed.
                      *
                      * @method success
-                     * @param httpRequest {XMLHttpRequest}
                      * @return {void}
                      */
-                    success: function success(httpRequest) {
+                    success: function success() {
 
-                        httpRequest.upload.onload = function onLoad() {
+                        this.httpRequest.upload.onload = function onLoad() {
 
                             $scope.$apply(function apply() {
 
@@ -137,29 +148,29 @@
 
                         };
 
-                    },
+                    }.bind(this),
 
                     /**
                      * Invoked once everything has been uploaded.
                      *
                      * @method finish
-                     * @param httpRequest {XMLHttpRequest}
                      * @return {void}
                      */
-                    finish: function finish(httpRequest) {
+                    finish: function finish() {
 
-                        httpRequest.onreadystatechange = function onReadyStateChange() {
+                        this.httpRequest.onreadystatechange = function onReadyStateChange() {
 
-                            if (httpRequest.readyState === 4 && httpRequest.status !== 0) {
+                            if (this.httpRequest.readyState === 4 && this.httpRequest.status !== 0) {
 
                                 $scope.$apply(function apply() {
 
                                     // Parse the response, and then emit the event passing along the response
                                     // and the uploaded files!
-                                    var response = $window.JSON.parse(httpRequest.responseText);
-                                    $rootScope.$broadcast('$dropletUploaded', response, this.files);
+                                    var response = $window.JSON.parse(this.httpRequest.responseText);
+                                    $rootScope.$broadcast('$dropletSuccess', response, this.files);
+                                    this.deferred.resolve(response, this.files);
 
-                                });
+                                }.bind(this));
 
                             }
 
@@ -171,19 +182,22 @@
                      * Invoked when an error is thrown when uploading the files.
                      *
                      * @method error
-                     * @param httpRequest {XMLHttpRequest}
                      * @return {void}
                      */
-                    error: function error(httpRequest) {
+                    error: function error() {
 
-                        httpRequest.upload.onerror = function onError() {
+                        this.httpRequest.upload.onerror = function onError() {
 
                             $scope.$apply(function apply() {
 
                                 $scope.finishedUploading();
                                 $scope.isError = true;
 
-                            });
+                                var response = $window.JSON.parse(this.httpRequest.responseText);
+                                $rootScope.$broadcast('$dropletError', response);
+                                this.deferred.reject(response);
+
+                            }.bind(this));
 
                         };
 
@@ -193,14 +207,13 @@
                      * Invoked each time there's a progress update on the files being uploaded.
                      *
                      * @method progress
-                     * @param httpRequest {XMLHttpRequest}
                      * @return {void}
                      */
-                    progress: function progress(httpRequest) {
+                    progress: function progress() {
 
                         var requestLength = $scope.getRequestLength(this.files);
 
-                        httpRequest.upload.onprogress = function onProgress(event) {
+                        this.httpRequest.upload.onprogress = function onProgress(event) {
 
                             $scope.$apply(function apply() {
 
@@ -437,13 +450,15 @@
                     (function attachEventListeners() {
 
                         // Define the files property so that each listener has the same interface.
-                        $scope.listeners.files = queuedFiles;
+                        $scope.listeners.files       = queuedFiles;
+                        $scope.listeners.deferred    = deferred;
+                        $scope.listeners.httpRequest = httpRequest;
 
                         // Configure the event listeners for the impending request.
-                        $scope.listeners.progress(httpRequest);
-                        $scope.listeners.success(httpRequest);
-                        $scope.listeners.error(httpRequest);
-                        $scope.listeners.finish(httpRequest);
+                        $scope.listeners.progress();
+                        $scope.listeners.success();
+                        $scope.listeners.error();
+                        $scope.listeners.finish();
 
                     })();
 

@@ -19,9 +19,16 @@
         });
 
         // Listen for when the files have been successfully uploaded.
-        $scope.$on('$dropletUploaded', function whenDropletUploaded(event, response, files) {
+        $scope.$on('$dropletSuccess', function onDropletSuccess(event, response, files) {
 
             console.log(response, files);
+
+        });
+
+        // Listen for when the files have failed to upload.
+        $scope.$on('$dropletSuccess', function onDropletError(event, response) {
+
+            console.log(response);
 
         });
 
