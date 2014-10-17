@@ -3,9 +3,9 @@
     "use strict";
 
     // The truest wisdom is a resolute determination...
-    $angular.module('ngDroplet', []).directive('droplet', ['$rootScope', '$window', '$timeout',
+    $angular.module('ngDroplet', []).directive('droplet', ['$rootScope', '$window', '$timeout', '$q',
 
-    function DropletDirective($rootScope, $window, $timeout) {
+    function DropletDirective($rootScope, $window, $timeout, $q) {
 
         return {
 
@@ -106,15 +106,32 @@
                 $scope.listeners = {
 
                     /**
+                     * @property files
+                     * @type {Array}
+                     */
+                    files: [],
+
+                    /**
+                     * @property httpRequest
+                     * @type {XMLHttpRequest}
+                     */
+                    httpRequest: {},
+
+                    /**
+                     * @property deferred
+                     * @type {$q.defer}
+                     */
+                    deferred: {},
+
+                    /**
                      * Invoked once the HTTP request has been successfully completed.
                      *
                      * @method success
-                     * @param httpRequest {XMLHttpRequest}
                      * @return {void}
                      */
-                    success: function success(httpRequest) {
+                    success: function success() {
 
-                        httpRequest.upload.onload = function onLoad() {
+                        this.httpRequest.upload.onload = function onLoad() {
 
                             $scope.$apply(function apply() {
 
@@ -131,34 +148,33 @@
 
                         };
 
-                    },
+                    }.bind(this),
 
                     /**
                      * Invoked once everything has been uploaded.
                      *
                      * @method finish
-                     * @param httpRequest {XMLHttpRequest}
-                     * @param uploadedFiles {Array}
                      * @return {void}
                      */
-                    finish: function finish(httpRequest, uploadedFiles) {
+                    finish: function finish() {
 
-                        httpRequest.onreadystatechange = function onReadyStateChange() {
+                        this.httpRequest.onreadystatechange = function onReadyStateChange() {
 
-                            if (httpRequest.readyState === 4 && httpRequest.status !== 0) {
+                            if (this.httpRequest.readyState === 4 && this.httpRequest.status !== 0) {
 
                                 $scope.$apply(function apply() {
 
                                     // Parse the response, and then emit the event passing along the response
                                     // and the uploaded files!
-                                    var response = $window.JSON.parse(httpRequest.responseText);
-                                    $rootScope.$broadcast('$dropletUploaded', response, uploadedFiles);
+                                    var response = $window.JSON.parse(this.httpRequest.responseText);
+                                    $rootScope.$broadcast('$dropletSuccess', response, this.files);
+                                    this.deferred.resolve(response, this.files);
 
-                                });
+                                }.bind(this));
 
                             }
 
-                        };
+                        }.bind(this);
 
                     },
 
@@ -166,19 +182,22 @@
                      * Invoked when an error is thrown when uploading the files.
                      *
                      * @method error
-                     * @param httpRequest {XMLHttpRequest}
                      * @return {void}
                      */
-                    error: function error(httpRequest) {
+                    error: function error() {
 
-                        httpRequest.upload.onerror = function onError() {
+                        this.httpRequest.upload.onerror = function onError() {
 
                             $scope.$apply(function apply() {
 
                                 $scope.finishedUploading();
                                 $scope.isError = true;
 
-                            });
+                                var response = $window.JSON.parse(this.httpRequest.responseText);
+                                $rootScope.$broadcast('$dropletError', response);
+                                this.deferred.reject(response);
+
+                            }.bind(this));
 
                         };
 
@@ -188,17 +207,15 @@
                      * Invoked each time there's a progress update on the files being uploaded.
                      *
                      * @method progress
-                     * @param httpRequest {XMLHttpRequest}
-                     * @param requestLength {Number}
                      * @return {void}
                      */
-                    progress: function progress(httpRequest, requestLength) {
+                    progress: function progress() {
 
-                        httpRequest.upload.onprogress = function onProgress(event) {
+                        var requestLength = $scope.getRequestLength(this.files);
+
+                        this.httpRequest.upload.onprogress = function onProgress(event) {
 
                             $scope.$apply(function apply() {
-
-                                console.log(event.loaded);
 
                                 if (event.lengthComputable) {
 
@@ -390,7 +407,7 @@
 
                 /**
                  * @method uploadFiles
-                 * @return {void}
+                 * @return {$q.promise}
                  */
                 $scope.uploadFiles = function uploadFiles() {
 
@@ -401,7 +418,8 @@
                         formData      = new $window.FormData(),
                         queuedFiles   = $scope.filterFiles($scope.FILE_TYPES.VALID),
                         fileProperty  = $scope.options.useArray ? 'file[]' : 'file',
-                        requestLength = $scope.getRequestLength(queuedFiles);
+                        requestLength = $scope.getRequestLength(queuedFiles),
+                        deferred      = $q.defer();
 
                     // Initiate the HTTP request.
                     httpRequest.open('post', $scope.requestUrl, true);
@@ -431,11 +449,16 @@
                      */
                     (function attachEventListeners() {
 
+                        // Define the files property so that each listener has the same interface.
+                        $scope.listeners.files       = queuedFiles;
+                        $scope.listeners.deferred    = deferred;
+                        $scope.listeners.httpRequest = httpRequest;
+
                         // Configure the event listeners for the impending request.
-                        $scope.listeners.finish(httpRequest, queuedFiles);
-                        $scope.listeners.success(httpRequest);
-                        $scope.listeners.progress(httpRequest, requestLength);
-                        $scope.listeners.error(httpRequest);
+                        $scope.listeners.progress();
+                        $scope.listeners.success();
+                        $scope.listeners.error();
+                        $scope.listeners.finish();
 
                     })();
 
@@ -448,6 +471,7 @@
                     // Voila...
                     $scope.isUploading = true;
                     httpRequest.send(formData);
+                    return deferred.promise;
 
                 };
 
@@ -500,7 +524,6 @@
                  * @method getRequestLength
                  * @param [files=[]] {Array}
                  * @return {Number}
-                 * @private
                  */
                 $scope.getRequestLength = function getRequestLength(files) {
 
@@ -566,10 +589,12 @@
                         },
 
                         /**
-                         * @property isError
-                         * @type {Object}
+                         * @method isError
+                         * @type {Boolean}
                          */
-                        isError: $scope.isError,
+                        isError: function isError() {
+                            return $scope.isError;
+                        },
 
                         /**
                          * Determines if there are files ready and waiting to be uploaded.
