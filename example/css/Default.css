@@ -79,6 +79,11 @@ section.container section.droplet droplet {
     background-color: rgba(255, 255, 255, .1);
     margin-top: -5px;
     padding-top: 5px;
+    transition: box-shadow 0.35s;
+}
+
+section.container section.droplet droplet.droplet-event-dragover {
+    box-shadow: inset 0 0 100px rgba(255, 255, 255, .25);
 }
 
 section.container section.droplet droplet comment:after {
@@ -243,6 +248,14 @@ section.container section.droplet section.toolbar comment.progress {
     color: rgba(0, 0, 0, .45);
     font-size: 11px;
     padding: 0 8px;
+    margin-top: -25px;
+    transition: margin-top 0.35s;
+    opacity: 0;
+}
+
+section.container section.droplet section.toolbar comment.progress:hover {
+    margin-top: 0;
+    opacity: 1;
 }
 
 section.container section.droplet section.toolbar comment.progress span {

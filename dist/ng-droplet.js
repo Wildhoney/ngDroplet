@@ -732,6 +732,15 @@
                  */
                 var _preventDefault = function _preventDefault(event) {
 
+                    // Remove all of the possible class names.
+                    element.removeClass('droplet-event-dragleave');
+                    element.removeClass('droplet-event-dragenter');
+                    element.removeClass('droplet-event-dragover');
+                    element.removeClass('droplet-event-drop');
+
+                    // ...And then add the current class name.
+                    element.addClass('droplet-event-' + event.type);
+
                     event.preventDefault();
                     event.stopPropagation();
 
@@ -898,8 +907,8 @@
         };
 
         // Create the actual input elements.
-        createDirective('dropletUploadSingle', '<input type="file" />');
-        createDirective('dropletUploadMultiple', '<input type="file" multiple="multiple" />');
+        createDirective('dropletUploadSingle', '<inputclass="droplet-upload droplet-single" type="file" />');
+        createDirective('dropletUploadMultiple', '<input class="droplet-upload droplet-multiple" type="file" multiple="multiple" />');
 
     })();
 

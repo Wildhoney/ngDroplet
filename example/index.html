@@ -41,7 +41,7 @@
 
                 <input type="button" class="upload-files" value="Uploading..." ng-show="interface.isUploading()" />
 
-                <comment class="progress" ng-show="interface.isUploading()">
+                <comment class="progress" ng-class="{ visible: interface.isUploading() }">
                     Uploaded: <span>{{interface.progress.percent}}%</span>
                 </comment>
 
