@@ -44,7 +44,7 @@
             .pipe(jshint.reporter('default'));
     });
 
-    gulp.task('test', ['hint']);
+    gulp.task('test', ['karma', 'hint']);
     gulp.task('default', ['test', 'build']);
 
 })();
