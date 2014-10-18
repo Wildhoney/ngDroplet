@@ -733,13 +733,13 @@
                 var _preventDefault = function _preventDefault(event) {
 
                     // Remove all of the possible class names.
-                    element.removeClass('droplet-event-dragleave');
-                    element.removeClass('droplet-event-dragenter');
-                    element.removeClass('droplet-event-dragover');
-                    element.removeClass('droplet-event-drop');
+                    element.removeClass('event-dragleave');
+                    element.removeClass('event-dragenter');
+                    element.removeClass('event-dragover');
+                    element.removeClass('event-drop');
 
                     // ...And then add the current class name.
-                    element.addClass('droplet-event-' + event.type);
+                    element.addClass('event-' + event.type);
 
                     event.preventDefault();
                     event.stopPropagation();

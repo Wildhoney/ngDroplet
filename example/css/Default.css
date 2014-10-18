@@ -82,7 +82,7 @@ section.container section.droplet droplet {
     transition: box-shadow 0.35s;
 }
 
-section.container section.droplet droplet.droplet-event-dragover {
+section.container section.droplet droplet.event-dragover {
     box-shadow: inset 0 0 100px rgba(255, 255, 255, .25);
 }
 
@@ -103,7 +103,8 @@ section.container section.droplet droplet comment:after {
     text-align: center;
 }
 
-section.container section.droplet droplet:hover comment:after {
+section.container section.droplet droplet:hover comment:after,
+section.container section.droplet droplet.event-dragover comment:after {
     content: "...And Drop!";
 }
 
@@ -248,13 +249,13 @@ section.container section.droplet section.toolbar comment.progress {
     color: rgba(0, 0, 0, .45);
     font-size: 11px;
     padding: 0 8px;
-    margin-top: -25px;
-    transition: margin-top 0.35s;
+    margin-right: -60px;
     opacity: 0;
+    transition: all 0.55s;
 }
 
 section.container section.droplet section.toolbar comment.progress.visible {
-    margin-top: 0;
+    margin-right: 0;
     opacity: 1;
 }
 
