@@ -66,7 +66,10 @@
                  */
                 $scope.options = {
                     disableXFileSize: false,
-                    useArray: true
+                    useArray: true,
+                    statuses: {
+                        success: [200, 201, 202, 203, 204, 205, 206, 207, 208, 226]
+                    }
                 };
 
                 /**
@@ -124,53 +127,46 @@
                     deferred: {},
 
                     /**
-                     * Invoked once the HTTP request has been successfully completed.
+                     * Invoked once everything has been uploaded.
                      *
                      * @method success
                      * @return {void}
                      */
                     success: function success() {
 
-                        this.httpRequest.upload.onload = function onLoad() {
-
-                            $scope.$apply(function apply() {
-
-                                $angular.forEach(this.files, function forEach(model) {
-
-                                    // Advance the status of the file to that of an uploaded file.
-                                    model.type = $scope.FILE_TYPES.UPLOADED;
-
-                                });
-
-                                $scope.finishedUploading();
-
-                            }.bind(this));
-
-                        }.bind(this);
-
-                    },
-
-                    /**
-                     * Invoked once everything has been uploaded.
-                     *
-                     * @method finish
-                     * @return {void}
-                     */
-                    finish: function finish() {
-
                         this.httpRequest.onreadystatechange = function onReadyStateChange() {
 
-                            if (this.httpRequest.readyState === 4 && this.httpRequest.status !== 0) {
+                            var statuses = $scope.options.statuses.success;
 
-                                $scope.$apply(function apply() {
+                            if (this.httpRequest.readyState === 4) {
 
-                                    // Parse the response, and then emit the event passing along the response
-                                    // and the uploaded files!
-                                    var response = $window.JSON.parse(this.httpRequest.responseText);
-                                    $rootScope.$broadcast('$dropletSuccess', response, this.files);
-                                    this.deferred.resolve(response, this.files);
+                                if (statuses.indexOf(this.httpRequest.status) !== -1) {
 
-                                }.bind(this));
+                                    $scope.$apply(function apply() {
+
+                                        // Parse the response, and then emit the event passing along the response
+                                        // and the uploaded files!
+                                        var response = $window.JSON.parse(this.httpRequest.responseText);
+                                        $rootScope.$broadcast('$dropletSuccess', response, this.files);
+                                        this.deferred.resolve(response, this.files);
+
+                                        $scope.finishedUploading();
+
+                                        $angular.forEach(this.files, function forEach(model) {
+
+                                            // Advance the status of the file to that of an uploaded file.
+                                            model.type = $scope.FILE_TYPES.UPLOADED;
+
+                                        });
+
+                                    }.bind(this));
+
+                                    return;
+
+                                }
+
+                                // Error was thrown instead.
+                                this.httpRequest.upload.onerror();
 
                             }
 
@@ -199,7 +195,7 @@
 
                             }.bind(this));
 
-                        };
+                        }.bind(this);
 
                     },
 
@@ -458,7 +454,6 @@
                         $scope.listeners.progress();
                         $scope.listeners.success();
                         $scope.listeners.error();
-                        $scope.listeners.finish();
 
                     })();
 
