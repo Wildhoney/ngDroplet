@@ -34,12 +34,17 @@
 
             <section class="toolbar">
 
-                <input type="button" class="upload-files" value="Upload Files"
+                <input type="button" class="button upload-files" value="Upload Files"
                        ng-click="interface.uploadFiles()"
                        ng-hide="interface.isUploading()"
                        ng-class="{ clickable: interface.isReady() }" />
 
                 <input type="button" class="upload-files" value="Uploading..." ng-show="interface.isUploading()" />
+
+                <div class="add-files">
+                    <input type="button" class="button add-files" value="Add Files..." />
+                    <droplet-upload-multiple ng-model="interface"></droplet-upload-multiple>
+                </div>
 
                 <comment class="progress" ng-class="{ visible: interface.isUploading() }">
                     Uploaded: <span>{{interface.progress.percent}}%</span>
@@ -79,8 +84,6 @@
                 </ul>
 
             </droplet>
-
-            <droplet-upload-multiple ng-model="interface"></droplet-upload-multiple>
 
         </section>
 

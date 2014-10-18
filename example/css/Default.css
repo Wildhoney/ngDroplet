@@ -213,24 +213,49 @@ section.container section.droplet section.toolbar {
     background: linear-gradient(to bottom, #ededed 0%, #dedede 100%);
 }
 
-section.container section.droplet section.toolbar input.upload-files {
+section.container section.droplet section.toolbar .button {
+    display: inline-block;
+    background-color: transparent;
     float: left;
     overflow: hidden;
-    background-color: transparent;
     width: 100px;
     height: 100%;
     border: 0;
     cursor: pointer;
     border-right: 1px solid rgba(0, 0, 0, .1);
+    color: rgba(0, 0, 0, .75);
+    transition: all 0.25s;
+}
+
+section.container section.droplet section.toolbar .button:hover {
+    background-color: rgba(0, 0, 0, .1);
+}
+
+section.container section.droplet section.toolbar div.add-files {
+    float: left;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+section.container section.droplet section.toolbar div.add-files input.droplet-multiple {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1001;
+    opacity: 0.0001;
+    cursor: pointer;
+}
+
+section.container section.droplet section.toolbar div.add-files:hover input.add-files {
+    background-color: rgba(0, 0, 0, .1);
+}
+
+section.container section.droplet section.toolbar input.upload-files {
     transition: background-color 0.25s;
     outline: none;
     pointer-events: none;
     color: rgba(0, 0, 0, .15);
-    transition: all 0.25s;
-}
-
-section.container section.droplet section.toolbar input.upload-files:hover {
-    background-color: rgba(0, 0, 0, .1);
 }
 
 section.container section.droplet section.toolbar input.upload-files.clickable {
