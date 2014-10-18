@@ -39,7 +39,7 @@
                        ng-hide="interface.isUploading()"
                        ng-class="{ clickable: interface.isReady() }" />
 
-                <input type="button" class="upload-files" value="Uploading..." ng-show="interface.isUploading()" />
+                <input type="button" class="button upload-files" value="Uploading..." ng-show="interface.isUploading()" />
 
                 <div class="add-files">
                     <input type="button" class="button add-files" value="Add Files..." />
@@ -55,6 +55,11 @@
             <droplet ng-model="interface">
 
                 <comment></comment>
+
+                <section class="success" ng-class="{ visible: success }">
+                    Successfully uploaded {{uploadCount}} files.
+                    <a class="close" ng-click="success = false">&times;</a>
+                </section>
 
                 <ul class="files">
 

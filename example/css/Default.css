@@ -72,6 +72,7 @@ section.container section.droplet ul.statistics li label {
 
 section.container section.droplet droplet {
     display: inline-block;
+    z-index: 2;
     position: relative;
     border-radius: 2px;
     width: 100%;
@@ -83,7 +84,7 @@ section.container section.droplet droplet {
 }
 
 section.container section.droplet droplet.event-dragover {
-    box-shadow: inset 0 0 100px rgba(255, 255, 255, .25);
+    box-shadow: inset 0 0 100px rgba(255, 255, 255, .25), inset 0 0 5px rgba(255, 255, 255, .25);
 }
 
 section.container section.droplet droplet comment:after {
@@ -103,7 +104,6 @@ section.container section.droplet droplet comment:after {
     text-align: center;
 }
 
-section.container section.droplet droplet:hover comment:after,
 section.container section.droplet droplet.event-dragover comment:after {
     content: "...And Drop!";
 }
@@ -160,6 +160,7 @@ section.container section.droplet droplet ul.files li:hover div.container div.ca
 section.container section.droplet droplet ul.files li div.container div.card figure {
     display: block;
     position: absolute;
+    border-radius: 1px;
     width: 100%;
     height: 100%;
     backface-visibility: hidden;
@@ -204,9 +205,49 @@ section.container section.droplet droplet ul.files li div.container div.card fig
     color: black;
 }
 
+section.container section.droplet section.success {
+    position: absolute;
+    background-color: deepskyblue;
+    z-index: 2001;
+    width: 100%;
+    color: white;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, .15);
+    font-family: Lato, Arial, Tahoma, Helvetica, sans-serif;
+    font-size: 12px;
+    border-radius: 3px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, .25);
+    background: linear-gradient(to bottom, rgba(112, 176, 224, 1) 0%, rgba(136, 191, 232, 1) 100%);
+    transition: all .35s;
+    padding: 0 12px 0 12px;
+    top: -10px;
+}
+
+section.container section.droplet section.success.visible a.close {
+    position: absolute;
+    top: 12px;
+    height: 30px;
+    width: 30px;
+    font-size: 16px;
+    right: -5px;
+    cursor: pointer;
+    opacity: .5;
+    transition: opacity .25s;
+}
+
+section.container section.droplet section.success.visible a.close:hover {
+    opacity: 1;
+}
+
+section.container section.droplet section.success.visible {
+    padding: 15px 12px 10px 12px;
+    top: 0;
+}
+
 section.container section.droplet section.toolbar {
     margin-top: 5px;
     overflow: hidden;
+    position: relative;
+    z-index: 3;
     height: 25px;
     border-radius: 3px;
     box-shadow: 0 0 5px rgba(0, 0, 0, .25);
@@ -240,8 +281,9 @@ section.container section.droplet section.toolbar div.add-files {
 
 section.container section.droplet section.toolbar div.add-files input.droplet-multiple {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: -10px;
+    font-size: 28px;
+    left: -90px;
     z-index: 1001;
     opacity: 0.0001;
     cursor: pointer;
