@@ -135,18 +135,18 @@
 
                             $scope.$apply(function apply() {
 
-                                $scope.finishedUploading();
-
-                                $scope.forEachFile($scope.FILE_TYPES.VALID, function forEach(model) {
+                                $angular.forEach(this.files, function forEach(model) {
 
                                     // Advance the status of the file to that of an uploaded file.
                                     model.type = $scope.FILE_TYPES.UPLOADED;
 
                                 });
 
-                            });
+                                $scope.finishedUploading();
 
-                        };
+                            }.bind(this));
+
+                        }.bind(this);
 
                     },
 
