@@ -56,8 +56,12 @@
 
                 <comment></comment>
 
-                <section class="success" ng-class="{ visible: success }" ng-click="success = false">
+                <section class="message success" ng-class="{ visible: success }" ng-click="success = false">
                     Successfully uploaded {{uploadCount}} files.
+                </section>
+
+                <section class="message error" ng-class="{ visible: error }" ng-click="error = false">
+                    Failed to upload any of the files.
                 </section>
 
                 <ul class="files">

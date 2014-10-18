@@ -17,9 +17,15 @@
 
         /**
          * @property success
-         * @type {Number}
+         * @type {Boolean}
          */
-        $scope.success = 0;
+        $scope.success = false;
+
+        /**
+         * @property error
+         * @type {Boolean}
+         */
+        $scope.error = false;
 
         // Listen for when the interface has been configured.
         $scope.$on('$dropletReady', function whenDropletReady() {
@@ -44,9 +50,14 @@
         });
 
         // Listen for when the files have failed to upload.
-        $scope.$on('$dropletSuccess', function onDropletError(event, response) {
+        $scope.$on('$dropletError', function onDropletError(event, response) {
 
+            $scope.error = true;
             console.log(response);
+
+            $timeout(function timeout() {
+                $scope.error = false;
+            }, 5000);
 
         });
 
