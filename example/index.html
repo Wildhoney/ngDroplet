@@ -56,9 +56,8 @@
 
                 <comment></comment>
 
-                <section class="success" ng-class="{ visible: success }">
+                <section class="success" ng-class="{ visible: success }" ng-click="success = false">
                     Successfully uploaded {{uploadCount}} files.
-                    <a class="close" ng-click="success = false">&times;</a>
                 </section>
 
                 <ul class="files">

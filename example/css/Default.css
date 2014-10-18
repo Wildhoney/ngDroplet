@@ -35,7 +35,6 @@ section.container {
 
 section.container section.droplet {
     position: relative;
-    overflow: hidden;
 }
 
 section.container section.droplet h1 a {
@@ -217,25 +216,10 @@ section.container section.droplet section.success {
     border-radius: 3px;
     box-shadow: 0 0 5px rgba(0, 0, 0, .25);
     background: linear-gradient(to bottom, rgba(112, 176, 224, 1) 0%, rgba(136, 191, 232, 1) 100%);
-    transition: all .35s;
+    transition: all .55s;
     padding: 0 12px 0 12px;
     top: -10px;
-}
-
-section.container section.droplet section.success.visible a.close {
-    position: absolute;
-    top: 12px;
-    height: 30px;
-    width: 30px;
-    font-size: 16px;
-    right: -5px;
     cursor: pointer;
-    opacity: .5;
-    transition: opacity .25s;
-}
-
-section.container section.droplet section.success.visible a.close:hover {
-    opacity: 1;
 }
 
 section.container section.droplet section.success.visible {
