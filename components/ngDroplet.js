@@ -367,7 +367,16 @@
                  * @return {String}
                  */
                 $scope.getExtension = function getExtension(file) {
+
+                    if (file.name.indexOf('.') === -1) {
+
+                        // Filename doesn't actually have an extension.
+                        return '';
+
+                    }
+
                     return file.name.split('.').pop().trim().toLowerCase();
+
                 };
 
                 /**
@@ -377,27 +386,23 @@
                  */
                 $scope.traverseFiles = function traverseFiles(files) {
 
-                    $scope.$apply(function apply() {
+                    for (var index = 0, numFiles = files.length; index < numFiles; index++) {
 
-                        for (var index = 0, numFiles = files.length; index < numFiles; index++) {
+                        var file      = files[index],
+                            extension = $scope.getExtension(file),
+                            type      = $scope.FILE_TYPES.VALID;
 
-                            var file      = files[index],
-                                extension = $scope.getExtension(file),
-                                type      = $scope.FILE_TYPES.VALID;
+                        if ($scope.extensions.indexOf(extension) === -1) {
 
-                            if ($scope.extensions.indexOf(extension) === -1) {
-
-                                // Invalid extension which we must reject!
-                                type = $scope.FILE_TYPES.INVALID
-
-                            }
-
-                            // Finally we'll register the file using the type that has been deduced.
-                            $scope.addFile(file, type);
+                            // Invalid extension which we must reject!
+                            type = $scope.FILE_TYPES.INVALID
 
                         }
 
-                    });
+                        // Finally we'll register the file using the type that has been deduced.
+                        $scope.addFile(file, type);
+
+                    }
 
                 };
 
@@ -504,7 +509,7 @@
                     for (var header in $scope.requestPostData) {
 
                         if ($scope.requestPostData.hasOwnProperty(header)) {
-                            formData.append(header, $scope.requestHeaders[header]);
+                            formData.append(header, $scope.requestPostData[header]);
                         }
 
                     }
@@ -767,7 +772,10 @@
                 element.bind('drop', function onDrop(event) {
 
                     _preventDefault(event);
-                    scope.traverseFiles(event.dataTransfer.files);
+
+                    scope.$apply(function apply() {
+                        scope.traverseFiles(event.dataTransfer.files);
+                    });
 
                 });
 
