@@ -695,6 +695,24 @@
 
                             $scope.extensions = extensions;
 
+                        },
+
+                        /**
+                         * @method defineHTTPSuccess
+                         * @param statuses {Array}
+                         * @return {void}
+                         */
+                        defineHTTPSuccess: function defineHTTPSuccess(statuses) {
+
+                            if (!$angular.isArray(extensions)) {
+
+                                // Developer didn't pass an array of extensions!
+                                $scope.throwException('Status list must be an array');
+
+                            }
+
+                            $scope.options.statuses.success = statuses;
+
                         }
 
                     };
