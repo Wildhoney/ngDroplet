@@ -139,7 +139,7 @@
                 invalidMockFileModel = { name: 'Mock.pdf', type: 'application/pdf' },
                 files = [mockFileModel, mockFileModel, mockFileModel, mockFileModel, invalidMockFileModel];
 
-            scope.extensions = ['png'];
+            scope.options.extensions = ['png'];
             scope.traverseFiles(files);
 
             expect(scope.files.length).toEqual(5);
@@ -162,7 +162,7 @@
             var scope = compileDirective('<droplet></droplet>').scope,
                 xmlHttpRequest = new MockXMLHttpRequest();
 
-            scope.requestHeaders = { exampleHeader: 'okay', andAnotherHeader: 'sunshine' };
+            scope.options.requestHeaders = { exampleHeader: 'okay', andAnotherHeader: 'sunshine' };
             var data = scope.addRequestHeaders(xmlHttpRequest);
 
             expect(data[0]).toEqual('exampleHeader');
@@ -186,7 +186,7 @@
             var scope = compileDirective('<droplet></droplet>').scope,
                 formData = new MockFormData();
 
-            scope.requestPostData = { morePost: 'everything', dataToCome: 'is', okay: 'okay!' };
+            scope.options.requestPostData = { morePost: 'everything', dataToCome: 'is', okay: 'okay!' };
             var data = scope.addPostData(formData);
 
             expect(data[0]).toEqual('morePost');
