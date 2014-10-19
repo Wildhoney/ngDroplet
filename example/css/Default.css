@@ -5,9 +5,9 @@
 }
 
 body {
-    padding: 50px;
     text-align: center;
     height: 100%;
+    display: table;
 }
 
 body, html {
@@ -37,12 +37,17 @@ section.background {
 }
 
 section.container {
-    text-align: left;
-    width: 670px;
+    width: 100%;
     margin: auto;
+    display: table-cell;
+    vertical-align: middle;
+
 }
 
 section.container section.droplet {
+    width: 670px;
+    margin: auto;
+    text-align: left;
     position: relative;
 }
 
