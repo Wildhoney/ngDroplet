@@ -65,42 +65,77 @@
                  * @type {Object}
                  */
                 $scope.options = {
+
+                    /**
+                     * URL that will be called when making the POST request.
+                     *
+                     * @property requestUrl
+                     * @type {String}
+                     */
+                    requestUrl: '',
+
+                    /**
+                     * Determines whether the X-File-Size header is appended to the request.
+                     *
+                     * @property disableXFileSize
+                     * @type {Boolean}
+                     */
                     disableXFileSize: false,
+
+                    /**
+                     * Whether to use the array notation for the file parameter, or not.
+                     *
+                     * @property useArray
+                     * @type {Boolean}
+                     */
                     useArray: true,
+
+                    /**
+                     * Additional headers to append to the request.
+                     *
+                     * @property requestHeaders
+                     * @type {Object}
+                     */
+                    requestHeaders: {},
+
+                    /**
+                     * Additional POST to data to be appended to the FormData object.
+                     *
+                     * @property requestPostData
+                     * @type {Object}
+                     */
+                    requestPostData: {},
+
+                    /**
+                     * List of valid extensions for uploading to the server.
+                     *
+                     * @property extensions
+                     * @type {Array}
+                     */
+                    extensions: [],
+
+                    /**
+                     * @property statuses
+                     * @type {Object}
+                     */
                     statuses: {
+
+                        /**
+                         * List of HTTP status codes that denote a successful HTTP request.
+                         *
+                         * @property success
+                         * @type {Array}
+                         */
                         success: [200, 201, 202, 203, 204, 205, 206, 207, 208, 226]
+                        
                     }
                 };
-
-                /**
-                 * @property extensions
-                 * @type {Array}
-                 */
-                $scope.extensions = [];
-
-                /**
-                 * @property requestUrl
-                 * @type {String}
-                 */
-                $scope.requestUrl = '';
 
                 /**
                  * @property requestProgress
                  * @type {Object}
                  */
                 $scope.requestProgress = { percent: 0, total: 0, loaded: 0 };
-
-                /**
-                 * @property requestHeaders
-                 * @type {Object}
-                 */
-                $scope.requestHeaders = {};
-
-                /**
-                 * @property requestPostData
-                 * @type {Object}
-                 */
-                $scope.requestPostData = {};
 
                 /**
                  * @property listeners
@@ -392,7 +427,7 @@
                             extension = $scope.getExtension(file),
                             type      = $scope.FILE_TYPES.VALID;
 
-                        if ($scope.extensions.indexOf(extension) === -1) {
+                        if ($scope.options.extensions.indexOf(extension) === -1) {
 
                             // Invalid extension which we must reject!
                             type = $scope.FILE_TYPES.INVALID
@@ -423,7 +458,7 @@
                         deferred      = $q.defer();
 
                     // Initiate the HTTP request.
-                    httpRequest.open('post', $scope.requestUrl, true);
+                    httpRequest.open('post', $scope.options.requestUrl, true);
 
                     /**
                      * @method appendCustomData
@@ -485,15 +520,15 @@
                  */
                 $scope.addRequestHeaders = function addRequestHeaders(httpRequest) {
 
-                    for (var header in $scope.requestHeaders) {
+                    for (var header in $scope.options.requestHeaders) {
 
-                        if ($scope.requestHeaders.hasOwnProperty(header)) {
-                            httpRequest.setRequestHeader(header, $scope.requestHeaders[header]);
+                        if ($scope.options.requestHeaders.hasOwnProperty(header)) {
+                            httpRequest.setRequestHeader(header, $scope.options.requestHeaders[header]);
                         }
 
                     }
 
-                    return Object.keys($scope.requestHeaders);
+                    return Object.keys($scope.options.requestHeaders);
 
                 };
 
@@ -506,15 +541,15 @@
                  */
                 $scope.addPostData = function addPostData(formData) {
 
-                    for (var header in $scope.requestPostData) {
+                    for (var header in $scope.options.requestPostData) {
 
-                        if ($scope.requestPostData.hasOwnProperty(header)) {
-                            formData.append(header, $scope.requestPostData[header]);
+                        if ($scope.options.requestPostData.hasOwnProperty(header)) {
+                            formData.append(header, $scope.options.requestPostData[header]);
                         }
 
                     }
 
-                    return Object.keys($scope.requestPostData);
+                    return Object.keys($scope.options.requestPostData);
 
                 };
 
@@ -644,7 +679,7 @@
                          * @return {void}
                          */
                         setRequestUrl: function setRequestUrl(url) {
-                            $scope.requestUrl = url;
+                            $scope.options.requestUrl = url;
                         },
 
                         /**
@@ -653,7 +688,7 @@
                          * @return {void}
                          */
                         setRequestHeaders: function setRequestHeaders(headers) {
-                            $scope.requestHeaders = headers;
+                            $scope.options.requestHeaders = headers;
                         },
 
                         /**
@@ -662,7 +697,7 @@
                          * @return {void}
                          */
                         setPostData: function setPostData(data) {
-                            $scope.requestPostData = data;
+                            $scope.options.requestPostData = data;
                         },
 
                         /**
@@ -698,7 +733,7 @@
 
                             }
 
-                            $scope.extensions = extensions;
+                            $scope.options.extensions = extensions;
 
                         },
 
