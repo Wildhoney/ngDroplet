@@ -10,3 +10,7 @@
 
 * **Heroku**: [http://ng-droplet.herokuapp.com/](http://ng-droplet.herokuapp.com/)
 * **Bower:** `bower install ng-droplet`
+
+![ngDroplet Screenshot](http://i.imgur.com/Ldev5gl.png)
+
+---
