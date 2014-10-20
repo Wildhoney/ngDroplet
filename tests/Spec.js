@@ -2,7 +2,14 @@
 
     describe('ngDroplet', function() {
 
-        var mockFileModel = { name: 'Mock.png', type: 'image/png', size: 200 };
+        // Mock the "File" object for testing purposes.
+        window.File = function(name, type, size) {
+            this.name = name;
+            this.type = type;
+            this.size = size;
+        };
+
+        var mockFileModel = new File('Mock.png', 'image/png', 200);
 
         /**
          * @method compileDirective
@@ -137,7 +144,7 @@
         it('Should be able to traverse the files;', function() {
 
             var scope = compileDirective('<droplet></droplet>').scope,
-                invalidMockFileModel = { name: 'Mock.pdf', type: 'application/pdf' },
+                invalidMockFileModel = new File('Mock.pdf', 'application/pdf', 200),
                 files = [mockFileModel, mockFileModel, mockFileModel, mockFileModel, invalidMockFileModel];
 
             scope.options.extensions = ['png'];
