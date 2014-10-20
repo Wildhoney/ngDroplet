@@ -7,6 +7,7 @@
     <!-- Dependencies! -->
     <script type="text/javascript" src="js/vendor/angular/angular.js"></script>
     <script type="text/javascript" src="js/vendor/ng-droplet/ng-droplet.js"></script>
+    <script type="text/javascript" src="js/vendor/progressbar.js/dist/progressbar.js"></script>
 
     <!-- Styles! -->
     <link rel="stylesheet" type="text/css" href="css/Default.css" />
@@ -49,12 +50,21 @@
                 </div>
 
                 <comment class="progress" ng-class="{ visible: interface.isUploading() }">
-                    Uploaded: <span>{{interface.progress.percent}}%</span>
+                    Uploaded: {{interface.progress.percent}}%
                 </comment>
 
             </section>
 
             <droplet ng-model="interface">
+
+                <div class="loading" ng-class="{ visible: interface.isUploading() }">
+                    <svg viewBox="0 0 400 400">
+                        <path class="loading-path" data-progressbar ng-model="interface.progress.percent"
+                              d="M 0,1 L 398,1 L 398,234 L 1,234 L 0,1"
+                              stroke="#D3B2D1" stroke-width="1" fill-opacity="0"
+                              style="stroke-dasharray: 392px, 392px;stroke-dashoffset: 392px;"></path>
+                    </svg>
+                </div>
 
                 <comment></comment>
 
@@ -69,26 +79,9 @@
                 <ul class="files">
 
                     <li ng-repeat="model in interface.getFiles(interface.FILE_TYPES.VALID)">
-
-                        <div class="container">
-
-                            <div class="card">
-
-                                <figure class="front">
-                                    <droplet-preview ng-model="model"></droplet-preview>
-                                </figure>
-
-                                <figure class="back">
-                                    <div><label>Size:</label> {{model.file.size / 1024 / 1024 | number: 2}}MB</div>
-                                    <div><label>MIME:</label> {{model.mimeType}}</div>
-                                    <div><label>Extension:</label> {{model.extension}}</div>
-                                    <div><a class="delete" ng-click="model.deleteFile()">Delete File</a></div>
-                                </figure>
-
-                            </div>
-
-                        </div>
-
+                        <droplet-preview ng-model="model"></droplet-preview>
+                        <div class="delete" ng-click="model.deleteFile()">&times;</div>
+                        <div class="size">{{model.file.size / 1024 / 1024 | number: 1}}MB</div>
                     </li>
 
                 </ul>
