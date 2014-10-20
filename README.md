@@ -107,6 +107,30 @@ Where the second parameter &mdash; `type` &mdash; relates to the aforementioned 
 
 Essentially the `droplet-preview` node accepts **any** `File` object as its `ng-model` &ndash; but it will load **only** those files that pass the `isImage()` method's validation.
 
+## Input Elements
+
+Due to the directive's interface you can attach an `input` element that will allow users to add files in the traditional way &ndash; `ngDroplet` also supports `input` elements with the `multiple` attribute. All you need to do is attach the `interface` variable to the `ng-model` attribute:
+
+```html
+<!-- Single -->
+<droplet-upload-single ng-model="interface"></droplet-upload-single>
+
+<!-- Multiple -->
+<droplet-upload-multiple ng-model="interface"></droplet-upload-multiple>
+```
+
+## Upload Progress
+
+`ngDroplet` uses the `X-File-Size` header to calculate the progress of the uploading &ndash; all of the information is periodically updated to the `interface.progress` object in the following format:
+
+```javascript
+$scope.requestProgress = { percent: 0, total: 0, loaded: 0 };
+```
+
+With the above object you can merely print it to the screen like so: `{{interface.progress.percent}}%` &ndash; or dream up imaginative ways to use this useful information.
+
+
+
 ## Interface Methods
 
 * `uploadFiles`: Responsible for initiating the uploading process;
