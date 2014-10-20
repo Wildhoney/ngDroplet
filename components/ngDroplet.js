@@ -127,7 +127,7 @@
                          * @type {Array}
                          */
                         success: [200, 201, 202, 203, 204, 205, 206, 207, 208, 226]
-                        
+
                     }
                 };
 
@@ -846,7 +846,7 @@
              * @property template
              * @type {String}
              */
-            template: '<img ng-show="model.isImage()" ng-src="{{imageData}}" class="droplet-preview" />',
+            template: '<img ng-show="model.isImage()" style="background-image: url({{imageData}})" class="droplet-preview" />',
 
             /**
              * @method link
