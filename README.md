@@ -98,10 +98,11 @@ setType: function setType(type) {
 model.setType($scope.FILE_TYPES.VALID);
 ```
 
-Where the second parameter &mdash; `type` &mdash; relates to the aforementioned `FILE_TYPES` constant. `DropletModel` also contains a handful of useful methods:
+Where the parameter &mdash; `type` &mdash; relates to the aforementioned `FILE_TYPES` constant. `DropletModel` also contains a handful of useful methods:
 
 * `deleteFile`: Assign the file the `FILE_TYPES.DELETED` value;
 * `isImage`: Determines if the file is a valid image;
+* `setType`: Sets the type (`$scope.FILE_TYPES`) of the file;
 
 ### Image Previews
 
