@@ -24,6 +24,7 @@
   ],
   "dependencies": {
     "angular": "~1.2.26",
-    "angular-mocks": "~1.2.26"
+    "angular-mocks": "~1.2.26",
+    "progressbar.js": "~0.4.0"
   }
 }
