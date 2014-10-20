@@ -336,6 +336,10 @@
                          */
                         load: function load(file) {
 
+                            if (!(file instanceof $window.File)) {
+                                $scope.throwException('Loaded files must be an instance of the "File" object');
+                            }
+
                             this.file      = file;
                             this.date      = new $window.Date();
                             this.mimeType  = file.type;
