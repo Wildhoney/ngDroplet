@@ -129,8 +129,6 @@ $scope.requestProgress = { percent: 0, total: 0, loaded: 0 };
 
 With the above object you can merely print it to the screen like so: `{{interface.progress.percent}}%` &ndash; or dream up imaginative ways to use this useful information.
 
-
-
 ## Interface Methods
 
 * `uploadFiles`: Responsible for initiating the uploading process;
@@ -148,6 +146,22 @@ With the above object you can merely print it to the screen like so: `{{interfac
 * `getFiles`: Iterates over the files of any given bitwise type(s);
 * `allowedExtensions`: Specifies the extensions permitted to be uploaded;
 * `defineHTTPSuccess`: List of HTTP status codes that denote success;
+
+### HTTP Success w/ Regex
+
+HTTP status codes can also be define using regular expressions &ndash; all that you need to do is pass in `RegExp` objects in the array of status codes.
+
+For example to assert that every `2**` HTTP status code is valid, you can specify it like so:
+
+```javascript
+interface.defineHTTPSuccess([/2.{2}/]);
+```
+
+You are also allowed to mix and match `RegExp` objects with `Number` objects:
+
+```javascript
+interface.defineHTTPSuccess([/2.{2}/, 301, 302]);
+```
 
 ## Broadcasted Events
 
