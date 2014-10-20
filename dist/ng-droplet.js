@@ -61,15 +61,13 @@
                 $scope.isError = false;
 
                 /**
-                 * @method isSuccessStatus
+                 * @method isValidHTTPStatus
                  * @param statusCode {Number}
                  * @return {Boolean}
                  */
-                $scope.isSuccessStatus = function isSuccessStatus(statusCode) {
+                $scope.isValidHTTPStatus = function isValidHTTPStatus(statusCode) {
 
-                    var statuses = $scope.options.statuses.success;
-
-                    return statuses.some(function some(currentStatusCode) {
+                    return $scope.options.statuses.success.some(function some(currentStatusCode) {
 
                         var isRegExp = (currentStatusCode instanceof $window.RegExp);
 
@@ -84,6 +82,30 @@
 
                     });
 
+                };
+
+                /**
+                 * @method isValidExtension
+                 * @param extension {String}
+                 * @return {Boolean}
+                 */
+                $scope.isValidExtension = function isValidExtension(extension) {
+
+                    return $scope.options.extensions.some(function some(currentExtension) {
+
+                        var isRegExp = (currentExtension instanceof $window.RegExp);
+
+                        if (isRegExp) {
+
+                            // Evaluate the status code as a regular expression.
+                            return currentExtension.test(extension.toLowerCase());
+
+                        }
+
+                        return currentExtension.toLowerCase() === extension.toLowerCase();
+
+                    });
+                    
                 };
 
                 /**
@@ -199,7 +221,7 @@
 
                             if (this.httpRequest.readyState === 4) {
 
-                                if ($scope.isSuccessStatus(this.httpRequest.status)) {
+                                if ($scope.isValidHTTPStatus(this.httpRequest.status)) {
 
                                     $scope.$apply(function apply() {
 
@@ -451,10 +473,11 @@
                             extension = $scope.getExtension(file),
                             type      = $scope.FILE_TYPES.VALID;
 
-                        if ($scope.options.extensions.indexOf(extension) === -1) {
+                        if (!$scope.isValidExtension(extension)) {
 
                             // Invalid extension which we must reject!
-                            type = $scope.FILE_TYPES.INVALID
+                            type = $scope.FILE_TYPES.INVALID;
+
 
                         }
 
