@@ -46,7 +46,8 @@
             expect(typeof scope.DropletModel.prototype.isImage).toBe('function');
 
             var model = new scope.DropletModel();
-            model.load(mockFileModel, scope.FILE_TYPES.VALID);
+            model.load(mockFileModel);
+            model.setType(scope.FILE_TYPES.VALID);
 
             expect(model.file).toEqual(mockFileModel);
             expect(model.type).toEqual(scope.FILE_TYPES.VALID);

@@ -76,15 +76,26 @@ Therefore to iterate over **only** the valid files that are permitted to be uplo
 Before you begin iterating of the files it is perhaps necessary to know about the `DropletModel` which is assigned to each and every file added to `ngDroplet` &ndash; the `DropletModel` model is initiated using the `load` method:
 
 ```javascript
-load: function load(file, type) {
+load: function load(file) {
 
     this.file      = file;
-    this.type      = type;
     this.date      = new $window.Date();
     this.mimeType  = file.type;
     this.extension = $scope.getExtension(file);
 
 }
+```
+
+Each `DropletModel` is then assigned a type:
+
+```javascript
+setType: function setType(type) {
+    this.type = type;
+}
+
+// ...
+                        
+model.setType($scope.FILE_TYPES.VALID);
 ```
 
 Where the second parameter &mdash; `type` &mdash; relates to the aforementioned `FILE_TYPES` constant. `DropletModel` also contains a handful of useful methods:

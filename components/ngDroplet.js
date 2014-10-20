@@ -97,7 +97,7 @@
 
                         if (isRegExp) {
 
-                            // Evaluate the status code as a regular expression.
+                            // Evaluate the extension as a regular expression.
                             return currentExtension.test(extension.toLowerCase());
 
                         }
@@ -236,7 +236,7 @@
                                         $angular.forEach(this.files, function forEach(model) {
 
                                             // Advance the status of the file to that of an uploaded file.
-                                            model.type = $scope.FILE_TYPES.UPLOADED;
+                                            model.setType($scope.FILE_TYPES.UPLOADED);
 
                                         });
 
@@ -332,13 +332,11 @@
                         /**
                          * @method file
                          * @param file {File}
-                         * @param type {Number}
                          * @return {void}
                          */
-                        load: function load(file, type) {
+                        load: function load(file) {
 
                             this.file      = file;
-                            this.type      = type;
                             this.date      = new $window.Date();
                             this.mimeType  = file.type;
                             this.extension = $scope.getExtension(file);
@@ -351,6 +349,15 @@
                          */
                         deleteFile: function deleteFile() {
                             $scope.deleteFile(this);
+                        },
+
+                        /**
+                         * @method setType
+                         * @param type {Number}
+                         * @return {void}
+                         */
+                        setType: function setType(type) {
+                            this.type = type;
                         },
 
                         /**
@@ -406,7 +413,8 @@
 
                     // Create the model and then register the file.
                     var model = new $scope.DropletModel();
-                    model.load(file, type);
+                    model.load(file);
+                    model.setType(type);
 
                     $scope.files.push(model);
                     return model;
@@ -425,7 +433,7 @@
                         $scope.throwException('Method expects an instance of DropletModel');
                     }
 
-                    model.type = $scope.FILE_TYPES.DELETED;
+                    model.setType($scope.FILE_TYPES.DELETED);
 
                 };
 
