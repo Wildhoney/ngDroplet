@@ -213,6 +213,25 @@
 
         });
 
+        it('Should be able to determine valid extensions and HTTP status codes;', function(){
+
+            var scope = compileDirective('<droplet></droplet>').scope;
+
+            scope.options.statuses.success = [200, 201, 202, /3.+/];
+            expect(scope.isValidHTTPStatus(203)).toBeFalsy();
+            expect(scope.isValidHTTPStatus(200)).toBeTruthy();
+            expect(scope.isValidHTTPStatus(305)).toBeTruthy();
+
+            scope.options.extensions = ['jpg', 'PNG', /g[a-z]{2}/i];
+            expect(scope.isValidExtension('png')).toBeTruthy();
+            expect(scope.isValidExtension('jpg')).toBeTruthy();
+            expect(scope.isValidExtension('JPG')).toBeTruthy();
+            expect(scope.isValidExtension('gif')).toBeTruthy();
+            expect(scope.isValidExtension('exe')).toBeFalsy();
+            expect(scope.isValidExtension('pdf')).toBeFalsy();
+
+        });
+
     });
 
 })();
