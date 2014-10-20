@@ -157,6 +157,17 @@ With the above object you can merely print it to the screen like so: `{{interfac
 * `getFiles`: Iterates over the files of any given bitwise type(s);
 * `allowedExtensions`: Specifies the extensions permitted to be uploaded;
 * `defineHTTPSuccess`: List of HTTP status codes that denote success;
+* `useParser`: Configure a custom function for parsing the responses;
+
+### Custom Parser Function
+
+By default `ngDroplet` will attempt to parse the response as JSON, however if you want to use a custom function then you can set it using the `interface.options.useParser` method:
+
+```javascript
+interface.useParser(function myCustomerParserFn(responseText) {
+    return responseText.toLowerCase();
+});
+```
 
 ### HTTP Success w/ Regex
 
