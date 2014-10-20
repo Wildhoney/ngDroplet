@@ -61,6 +61,32 @@
                 $scope.isError = false;
 
                 /**
+                 * @method isSuccessStatus
+                 * @param statusCode {Number}
+                 * @return {Boolean}
+                 */
+                $scope.isSuccessStatus = function isSuccessStatus(statusCode) {
+
+                    var statuses = $scope.options.statuses.success;
+
+                    return statuses.some(function some(currentStatusCode) {
+
+                        var isRegExp = (currentStatusCode instanceof $window.RegExp);
+
+                        if (isRegExp) {
+
+                            // Evaluate the status code as a regular expression.
+                            return currentStatusCode.test(statusCode);
+
+                        }
+
+                        return currentStatusCode === statusCode;
+
+                    });
+
+                };
+
+                /**
                  * @property options
                  * @type {Object}
                  */
@@ -126,7 +152,7 @@
                          * @property success
                          * @type {Array}
                          */
-                        success: [200, 201, 202, 203, 204, 205, 206, 207, 208, 226]
+                        success: [/2.{2}/]
 
                     }
                 };
@@ -171,11 +197,9 @@
 
                         this.httpRequest.onreadystatechange = function onReadyStateChange() {
 
-                            var statuses = $scope.options.statuses.success;
-
                             if (this.httpRequest.readyState === 4) {
 
-                                if (statuses.indexOf(this.httpRequest.status) !== -1) {
+                                if ($scope.isSuccessStatus(this.httpRequest.status)) {
 
                                     $scope.$apply(function apply() {
 
@@ -744,7 +768,7 @@
                          */
                         defineHTTPSuccess: function defineHTTPSuccess(statuses) {
 
-                            if (!$angular.isArray(extensions)) {
+                            if (!$angular.isArray(statuses)) {
 
                                 // Developer didn't pass an array of extensions!
                                 $scope.throwException('Status list must be an array');
