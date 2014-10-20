@@ -131,6 +131,14 @@
                     disableXFileSize: false,
 
                     /**
+                     * @property parserFn
+                     * @type {Function}
+                     */
+                    parserFn: function parserFunction(responseText) {
+                        return $window.JSON.parse(responseText);
+                    },
+
+                    /**
                      * Whether to use the array notation for the file parameter, or not.
                      *
                      * @property useArray
@@ -227,7 +235,7 @@
 
                                         // Parse the response, and then emit the event passing along the response
                                         // and the uploaded files!
-                                        var response = $window.JSON.parse(this.httpRequest.responseText);
+                                        var response = $scope.options.parserFn(this.httpRequest.responseText);
                                         $rootScope.$broadcast('$dropletSuccess', response, this.files);
                                         this.deferred.resolve(response, this.files);
 
@@ -270,7 +278,7 @@
                                 $scope.finishedUploading();
                                 $scope.isError = true;
 
-                                var response = $window.JSON.parse(this.httpRequest.responseText);
+                                var response = $scope.options.parserFn(this.httpRequest.responseText);
                                 $rootScope.$broadcast('$dropletError', response);
                                 this.deferred.reject(response);
 
@@ -673,6 +681,21 @@
                          * @type {Object}
                          */
                         progress: $scope.requestProgress,
+
+                        /**
+                         * @method useParser
+                         * @param parserFn {Function}
+                         * @return {void}
+                         */
+                        useParser: function useParser(parserFn) {
+
+                            if (typeof parserFn !== 'function') {
+                                $scope.throwException('Parser function must be typeof "function"');
+                            }
+
+                            $scope.options.parserFn = parserFn;
+
+                        },
 
                         /**
                          * @method isUploading
