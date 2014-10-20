@@ -5,14 +5,15 @@
 }
 
 body {
-    text-align: center;
     height: 100%;
+    width: 100%;
     display: table;
 }
 
 body, html {
     height: 100%;
     overflow: hidden;
+    text-align: center;
 }
 
 .colourful {
@@ -176,6 +177,7 @@ section.container section.droplet droplet ul.files li img.droplet-preview {
     background-color: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, .25);
     border: 1px solid white;
+    display: block;
 }
 
 section.container section.droplet droplet ul.files li div.delete {
