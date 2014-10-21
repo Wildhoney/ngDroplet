@@ -61,27 +61,53 @@
                 $scope.isError = false;
 
                 /**
+                 * @method _isValid
+                 * @param value {String|Number}
+                 * @param values {Array}
+                 * @return {Boolean}
+                 * @private
+                 */
+                var _isValid = function _isValid(value, values) {
+
+                    /**
+                     * @method value
+                     * @param value {String|Number}
+                     * @return {String|Number}
+                     */
+                    var modify = function modify(value) {
+
+                        if (typeof value === 'string') {
+                            return value.toLowerCase();
+                        }
+
+                        return value;
+
+                    };
+
+                    return values.some(function some(currentValue) {
+
+                        var isRegExp = (currentValue instanceof $window.RegExp);
+
+                        if (isRegExp) {
+
+                            // Evaluate the status code as a regular expression.
+                            return currentValue.test(modify(value));
+
+                        }
+
+                        return modify(currentValue) === modify(value);
+
+                    });
+
+                };
+
+                /**
                  * @method isValidHTTPStatus
                  * @param statusCode {Number}
                  * @return {Boolean}
                  */
                 $scope.isValidHTTPStatus = function isValidHTTPStatus(statusCode) {
-
-                    return $scope.options.statuses.success.some(function some(currentStatusCode) {
-
-                        var isRegExp = (currentStatusCode instanceof $window.RegExp);
-
-                        if (isRegExp) {
-
-                            // Evaluate the status code as a regular expression.
-                            return currentStatusCode.test(statusCode);
-
-                        }
-
-                        return currentStatusCode === statusCode;
-
-                    });
-
+                    return _isValid(statusCode, $scope.options.statuses.success);
                 };
 
                 /**
@@ -90,22 +116,7 @@
                  * @return {Boolean}
                  */
                 $scope.isValidExtension = function isValidExtension(extension) {
-
-                    return $scope.options.extensions.some(function some(currentExtension) {
-
-                        var isRegExp = (currentExtension instanceof $window.RegExp);
-
-                        if (isRegExp) {
-
-                            // Evaluate the extension as a regular expression.
-                            return currentExtension.test(extension.toLowerCase());
-
-                        }
-
-                        return currentExtension.toLowerCase() === extension.toLowerCase();
-
-                    });
-                    
+                    return _isValid(extension, $scope.options.extensions);
                 };
 
                 /**
@@ -629,14 +640,12 @@
                  */
                 $scope.getRequestLength = function getRequestLength(files) {
 
-                    var size = 0;
+                    var allFiles = files || $scope.filterFiles($scope.FILE_TYPES.VALID);
 
-                    // Iterate over all of the files to determine the size of all valid files.
-                    $angular.forEach(files || $scope.filterFiles($scope.FILE_TYPES.VALID), function forEach(model) {
-                        size += model.file.size;
-                    });
-
-                    return size;
+                    // Iterate over all of the files to determine the size of all the specified files.
+                    return allFiles.reduce(function reduce(previousValue, currentModel) {
+                        return previousValue + currentModel.file.size;
+                    }, 0);
 
                 };
 
