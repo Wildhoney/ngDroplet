@@ -1,6 +1,6 @@
 # ngDroplet
 
-[Original Droplet module](https://github.com/Wildhoney/EmberDroplet) was created by me for Ember.js &ndash; `ngDroplet` is the Angular.js version. `ngDroplet` allows you to easily support drag and drop uploading in Angular.js &ndash; with additional sugar for uploading and managing files.
+The [original Droplet module](https://github.com/Wildhoney/EmberDroplet) was created by me for Ember.js &ndash; `ngDroplet` is the Angular.js version. `ngDroplet` allows you to easily support drag and drop uploading in Angular.js &ndash; with additional sugar for uploading and managing files.
 
 ![Travis](http://img.shields.io/travis/Wildhoney/ngDroplet.svg?style=flat)
 &nbsp;
@@ -20,10 +20,14 @@
 `ngDroplet` provides a useful interface with a handful of methods to interact with the module. However, to begin supporting the drag and drop feature, you don't need anything special &ndash; simply add the `droplet` node (or `droplet` attribute) to the DOM:
 
 ```html
+<!-- As an element -->
 <droplet></droplet>
+
+<!-- As an attribute -->
+<section data-droplet></section>
 ```
 
-By adding the `droplet` node your application will automatically support the dragging and dropping of files. However, in order to make the module useful, you should hook into the directive's interface &ndash; by using the `ng-model` attribute on the `droplet` node:
+By adding the `droplet` node &mdash; or of course, attribute &mdash; your application will automatically support the dragging and dropping of files. However, in order to make the module useful, you should hook into the directive's interface &ndash; by using the `ng-model` attribute on the `droplet` node:
 
 ```html
 <droplet ng-model="interface"></droplet>
@@ -43,6 +47,12 @@ With the directive's interface there are [many methods](#interface-methods) you 
 $scope.$on('$dropletReady', function whenDropletReady() {
     $scope.interface.allowedExtensions(['png', 'jpg', 'bmp', 'gif']);
 });
+```
+
+...Or support every extension with:
+
+```javascript
+$scope.interface.allowedExtensions([/.+/]);
 ```
 
 Finally you'll need to add a button to initiate the upload process:
@@ -70,6 +80,14 @@ Therefore to iterate over **only** the valid files that are permitted to be uplo
     {{model.name}}
 </div>
 ```
+
+As the `interface.FILE_TYPES` are bitwise values, you can combine them to fetch more than one type at a time &mdash; in the following case `interface.FILE_TYPES.VALID` and `interface.FILE_TYPES.INVALID`:
+
+```javascript
+interface.getFiles(interface.FILE_TYPES.VALID | interface.FILE_TYPES.INVALID)
+```
+
+It's also worth noting that if you emit any type when invoking `getFiles` then the method will return **all** of the files.
 
 ### File Model
 
@@ -172,7 +190,7 @@ interface.useParser(function myCustomerParserFn(responseText) {
 
 ### HTTP Success w/ Regex
 
-HTTP status codes can also be define using regular expressions &ndash; all that you need to do is pass in `RegExp` objects in the array of status codes.
+HTTP status codes can also be defined using regular expressions &ndash; all that you need to do is pass in `RegExp` objects in the array of status codes.
 
 For example to assert that every `2**` HTTP status code is valid, you can specify it like so:
 
