@@ -26,7 +26,7 @@
              * @type {Object}
              */
             scope: {
-                directiveInterface: '=ngModel'
+                interface: '=ngModel'
             },
 
             /**
@@ -692,10 +692,10 @@
                 (function setupDirectiveInterface() {
 
                     /**
-                     * @property directiveInterface
+                     * @property interface
                      * @type {Object}
                      */
-                    $scope.directiveInterface = {
+                    $scope.interface = {
 
                         /**
                          * @constant FILE_TYPES
