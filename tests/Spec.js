@@ -2,6 +2,8 @@
 
     describe('ngDroplet', function() {
 
+        beforeEach(module('ngDroplet'));
+
         // Mock the "File" object for testing purposes.
         window.File = function(name, type, size) {
             this.name = name;
@@ -25,7 +27,7 @@
 
                 scope = $rootScope.$new();
 
-                for (var property in properties) {
+                for (var property in properties || {}) {
 
                     if (properties.hasOwnProperty(property)) {
                         scope[property] = properties[property];
@@ -40,8 +42,6 @@
             return { scope: scope.$$childHead, html: document };
 
         };
-
-        beforeEach(module('ngDroplet'));
 
         it('Should be able to define the DropletModel blueprint;', function() {
 
@@ -249,6 +249,20 @@
             expect(scope.getEvent(new MockNativeEvent()) instanceof MockNativeEvent).toBeTruthy();
             expect(scope.getEvent(new MockJQueryEvent()) instanceof MockNativeEvent).toBeTruthy();
 
+        });
+
+        it('Should be able to add the files when an item is dropped;', function() {
+
+            var directive = compileDirective('<droplet ng-model="mockModel"></droplet>', { mockModel: {} }),
+                event     = document.createEvent('Event');
+
+            event.initEvent('drop', true, true);
+            event.dataTransfer = { files: [mockFileModel] };
+            directive.scope.options.extensions = ['png'];
+
+            directive.html[0].dispatchEvent(event);
+            expect(directive.scope.files.length).toEqual(1);
+            expect(directive.scope.filterFiles(directive.scope.FILE_TYPES.VALID).length).toEqual(1);
 
         });
 
