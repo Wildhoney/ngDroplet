@@ -1042,7 +1042,11 @@
 
                         // Subscribe to the "change" event.
                         element.bind('change', function onChange() {
-                            scope.interface.traverseFiles(element[0].files);
+
+                            scope.$apply(function apply() {
+                                scope.interface.traverseFiles(element[0].files);
+                            });
+
                         });
 
                     }
