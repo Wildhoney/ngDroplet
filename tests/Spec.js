@@ -221,7 +221,7 @@
 
         });
 
-        it('Should be able to determine valid extensions and HTTP status codes;', function(){
+        it('Should be able to determine valid extensions and HTTP status codes;', function() {
 
             var scope = compileDirective('<droplet></droplet>').scope;
 
@@ -237,6 +237,18 @@
             expect(scope.isValidExtension('gif')).toBeTruthy();
             expect(scope.isValidExtension('exe')).toBeFalsy();
             expect(scope.isValidExtension('pdf')).toBeFalsy();
+
+        });
+
+        it('Should be able to return the correct event, even when jQuery is used;', function() {
+
+            var scope           = compileDirective('<droplet></droplet>').scope,
+                MockNativeEvent = function MockNativeEvent() {},
+                MockJQueryEvent = function MockJQueryEvent() { this.originalEvent = new MockNativeEvent() };
+
+            expect(scope.getEvent(new MockNativeEvent()) instanceof MockNativeEvent).toBeTruthy();
+            expect(scope.getEvent(new MockJQueryEvent()) instanceof MockNativeEvent).toBeTruthy();
+
 
         });
 
