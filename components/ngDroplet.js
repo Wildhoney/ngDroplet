@@ -462,6 +462,7 @@
                     model.setType(type);
 
                     $scope.files.push(model);
+                    $rootScope.$broadcast('$dropletFileAdded', model);
                     return model;
 
                 };
@@ -479,6 +480,7 @@
                     }
 
                     model.setType($scope.FILE_TYPES.DELETED);
+                    $rootScope.$broadcast('$dropletFileDeleted', model);
 
                 };
 

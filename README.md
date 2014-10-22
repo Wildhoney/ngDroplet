@@ -209,3 +209,5 @@ interface.defineHTTPSuccess([/2.{2}/, 301, 302]);
 * `$dropletReady`: Emitted when the interface has been binded;
 * `$dropletSuccess`: Emitted when files have been uploaded;
 * `$dropletError`: Emitted when an error has occurred;
+* `$dropletFileAdded`: Emitted when a file has been added;
+* `$dropletFileDeleted`: Emitted when a file has been deleted;
