@@ -70,11 +70,11 @@
                 var _isValid = function _isValid(value, values) {
 
                     /**
-                     * @method value
+                     * @method conditionallyLowercase
                      * @param value {String|Number}
                      * @return {String|Number}
                      */
-                    var modify = function modify(value) {
+                    var conditionallyLowercase = function conditionallyLowercase(value) {
 
                         if (typeof value === 'string') {
                             return value.toLowerCase();
@@ -91,13 +91,35 @@
                         if (isRegExp) {
 
                             // Evaluate the status code as a regular expression.
-                            return currentValue.test(modify(value));
+                            return currentValue.test(conditionallyLowercase(value));
 
                         }
 
-                        return modify(currentValue) === modify(value);
+                        return conditionallyLowercase(currentValue) === conditionallyLowercase(value);
 
                     });
+
+                };
+
+                /**
+                 * Responsible for determining if the event is actually a jQuery event, which has therefore
+                 * placed the original event inside of the `originalEvent` property.
+                 *
+                 * @method getEvent
+                 * @param event {Object}
+                 * @return {Object}
+                 */
+                $scope.getEvent = function getEvent(event) {
+
+                    if ('originalEvent' in event) {
+
+                        // jQuery likes to send across its own event, and place the original event
+                        // in the `originalEvent` property.
+                        return event.originalEvent;
+
+                    }
+
+                    return event;
 
                 };
 
@@ -440,6 +462,7 @@
                     model.setType(type);
 
                     $scope.files.push(model);
+                    $rootScope.$broadcast('$dropletFileAdded', model);
                     return model;
 
                 };
@@ -457,6 +480,7 @@
                     }
 
                     model.setType($scope.FILE_TYPES.DELETED);
+                    $rootScope.$broadcast('$dropletFileDeleted', model);
 
                 };
 
@@ -876,6 +900,8 @@
                  */
                 var _preventDefault = function _preventDefault(event) {
 
+                    event = scope.getEvent(event);
+
                     // Remove all of the possible class names.
                     element.removeClass('event-dragleave');
                     element.removeClass('event-dragenter');
@@ -900,7 +926,10 @@
                     _preventDefault(event);
 
                     scope.$apply(function apply() {
+
+                        event = scope.getEvent(event);
                         scope.traverseFiles(event.dataTransfer.files);
+
                     });
 
                 });
