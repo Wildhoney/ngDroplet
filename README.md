@@ -137,6 +137,8 @@ Where the parameter &mdash; `type` &mdash; relates to the aforementioned `FILE_T
 </div>
 ```
 
+It's also worth noting that the `droplet-preview` directive is also supported in attribute form: `<section data-droplet-preview></section>`.
+
 Essentially the `droplet-preview` node accepts **any** `File` object as its `ng-model` &ndash; but it will load **only** those files that pass the `isImage()` method's validation.
 
 ## Input Elements
