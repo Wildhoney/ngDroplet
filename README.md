@@ -7,6 +7,8 @@ The [original Droplet module](https://github.com/Wildhoney/EmberDroplet) was cre
 ![npm](http://img.shields.io/npm/v/ng-droplet.svg?style=flat)
 &nbsp;
 ![License MIT](http://img.shields.io/badge/License-MIT-lightgrey.svg?style=flat)
+&nbsp;
+![IE10+](http://img.shields.io/badge/support-IE10-blue.svg?style=flat)
 
 * **Heroku**: [http://ng-droplet.herokuapp.com/](http://ng-droplet.herokuapp.com/)
 * **Bower:** `bower install ng-droplet`
