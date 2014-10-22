@@ -925,7 +925,7 @@
              * @property restrict
              * @type {String}
              */
-            restrict: 'E',
+            restrict: 'EA',
 
             /**
              * @property replace
