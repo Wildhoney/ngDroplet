@@ -26,7 +26,7 @@
              * @type {Object}
              */
             scope: {
-                directiveInterface: '=ngModel'
+                interface: '=ngModel'
             },
 
             /**
@@ -692,10 +692,10 @@
                 (function setupDirectiveInterface() {
 
                     /**
-                     * @property directiveInterface
+                     * @property interface
                      * @type {Object}
                      */
-                    $scope.directiveInterface = {
+                    $scope.interface = {
 
                         /**
                          * @constant FILE_TYPES
@@ -1087,7 +1087,7 @@
         };
 
         // Create the actual input elements.
-        createDirective('dropletUploadSingle', '<input class="droplet-upload droplet-single" type="file" />');
+        createDirective('dropletUploadSingle', '<inputclass="droplet-upload droplet-single" type="file" />');
         createDirective('dropletUploadMultiple', '<input class="droplet-upload droplet-multiple" type="file" multiple="multiple" />');
 
     })();
