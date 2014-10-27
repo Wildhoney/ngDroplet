@@ -239,16 +239,16 @@
                     files: [],
 
                     /**
-                     * @property httpRequest
-                     * @type {XMLHttpRequest}
+                     * @property deferred
+                     * @type {$q.defer|null}
                      */
-                    httpRequest: {},
+                    deferred: null,
 
                     /**
-                     * @property deferred
-                     * @type {$q.defer}
+                     * @property httpRequest
+                     * @type {XMLHttpRequest|null}
                      */
-                    deferred: {},
+                    httpRequest: null,
 
                     /**
                      * Invoked once everything has been uploaded.
@@ -386,6 +386,9 @@
                             this.mimeType  = file.type;
                             this.extension = $scope.getExtension(file);
 
+                            // File has been added!
+                            $rootScope.$broadcast('$dropletFileAdded', this);
+
                         },
 
                         /**
@@ -393,7 +396,12 @@
                          * @return {void}
                          */
                         deleteFile: function deleteFile() {
-                            $scope.deleteFile(this);
+
+                            this.setType($scope.FILE_TYPES.DELETED);
+
+                            // File has been deleted!
+                            $rootScope.$broadcast('$dropletFileDeleted', this);
+
                         },
 
                         /**
@@ -462,25 +470,7 @@
                     model.setType(type);
 
                     $scope.files.push(model);
-                    $rootScope.$broadcast('$dropletFileAdded', model);
                     return model;
-
-                };
-
-                /**
-                 * @method deleteFile
-                 * @throws Exception
-                 * @param model {Object}
-                 * @return {void}
-                 */
-                $scope.deleteFile = function deleteFile(model) {
-
-                    if (!(model instanceof $scope.DropletModel)) {
-                        $scope.throwException('Method expects an instance of DropletModel');
-                    }
-
-                    model.setType($scope.FILE_TYPES.DELETED);
-                    $rootScope.$broadcast('$dropletFileDeleted', model);
 
                 };
 
@@ -1087,7 +1077,7 @@
         };
 
         // Create the actual input elements.
-        createDirective('dropletUploadSingle', '<inputclass="droplet-upload droplet-single" type="file" />');
+        createDirective('dropletUploadSingle', '<input class="droplet-upload droplet-single" type="file" />');
         createDirective('dropletUploadMultiple', '<input class="droplet-upload droplet-multiple" type="file" multiple="multiple" />');
 
     })();
