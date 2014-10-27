@@ -114,14 +114,14 @@
 
         });
 
-        it('Should be able to delete files directly and through the model;', function() {
+        it('Should be able to delete files directly via the model;', function() {
 
             var scope = compileDirective('<droplet></droplet>').scope,
                 firstModel = scope.addFile(mockFileModel, scope.FILE_TYPES.VALID),
                 secondModel = scope.addFile(mockFileModel, scope.FILE_TYPES.VALID);
 
             expect(scope.filterFiles(scope.FILE_TYPES.VALID).length).toEqual(2);
-            scope.deleteFile(firstModel);
+            firstModel.deleteFile();
             expect(scope.filterFiles(scope.FILE_TYPES.VALID).length).toEqual(1);
             expect(scope.filterFiles(scope.FILE_TYPES.DELETED).length).toEqual(1);
             secondModel.deleteFile();
