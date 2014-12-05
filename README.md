@@ -75,6 +75,8 @@ It's necessary to know that each file has a special type assigned to it, and you
 $scope.FILE_TYPES = { VALID: 1, INVALID: 2, DELETED: 4, UPLOADED: 8 };
 ```
 
+**Note:** `ngDroplet` also defines a `FILE_TYPES.ALL` property.
+
 Therefore to iterate over **only** the valid files that are permitted to be uploaded, you must use the `FILE_TYPES.VALID` constant when invoking the `getFiles` methods on the interface:
 
 ```html
