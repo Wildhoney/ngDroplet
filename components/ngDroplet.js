@@ -42,6 +42,11 @@
                  */
                 $scope.FILE_TYPES = { VALID: 1, INVALID: 2, DELETED: 4, UPLOADED: 8 };
 
+                // Dynamically add the `ALL` property.
+                $scope.FILE_TYPES.ALL = Object.keys($scope.FILE_TYPES).reduce(function map(current, key) {
+                    return (current |= $scope.FILE_TYPES[key]);
+                }, 0);
+
                 /**
                  * @property files
                  * @type {Array}
