@@ -1073,6 +1073,11 @@
 
                         });
 
+                        // Reset the `value` of the element each time a user clicks.
+                        element.bind('click', function onClick() {
+                            this.value = null;
+                        });
+
                     }
 
                 }
