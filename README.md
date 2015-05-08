@@ -81,7 +81,7 @@ Therefore to iterate over **only** the valid files that are permitted to be uplo
 
 ```html
 <div ng-repeat="model in interface.getFiles(interface.FILE_TYPES.VALID)">
-    {{model.name}}
+    {{model.file.name}}
 </div>
 ```
 
@@ -134,7 +134,7 @@ Where the parameter &mdash; `type` &mdash; relates to the aforementioned `FILE_T
 <div ng-repeat="model in interface.getFiles(interface.FILE_TYPES.VALID)">
 
     <droplet-preview ng-model="model" ng-show="model.isImage()"></droplet-preview>
-    <section class="filename" ng-show="!model.isImage()">{{model.name}}</section>
+    <section class="filename" ng-show="!model.isImage()">{{model.file.name}}</section>
     
 </div>
 ```
