@@ -382,8 +382,8 @@
                          */
                         load: function load(file) {
 
-                            if (!(file instanceof $window.File)) {
-                                $scope.throwException('Loaded files must be an instance of the "File" object');
+                            if (!(file instanceof $window.File) && !(file instanceof $window.Blob)) {
+                                $scope.throwException('Loaded files must be an instance of the "File" or "Blob" objects');
                             }
 
                             this.file      = file;
@@ -499,14 +499,22 @@
                  */
                 $scope.getExtension = function getExtension(file) {
 
-                    if (file.name.indexOf('.') === -1) {
+	                var str, separator;
 
-                        // Filename doesn't actually have an extension.
-                        return '';
+	                if ( typeof file.name != 'undefined' ) {
+		                str = file.name;
+		                separator = '.';
+	                } else {
+		                str = file.type;
+		                separator = '/';
+	                }
 
-                    }
+	                if (str.indexOf(separator) === -1) {
+		                // Filename doesn't actually have an extension.
+		                return '';
+	                }
 
-                    return file.name.split('.').pop().trim().toLowerCase();
+	                return str.split(separator).pop().trim().toLowerCase();
 
                 };
 
