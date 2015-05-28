@@ -501,7 +501,7 @@
 
 	                var str, separator;
 
-	                if ( typeof file.name != 'undefined' ) {
+	                if ( typeof file.name !== 'undefined' ) {
 		                str = file.name;
 		                separator = '.';
 	                } else {
