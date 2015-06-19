@@ -23,12 +23,10 @@
     "url": "https://github.com/Wildhoney/ngDroplet/issues"
   },
   "homepage": "https://github.com/Wildhoney/ngDroplet",
-  "dependencies": {
-    "express": "^4.9.7",
-    "multer": "^0.1.6"
-  },
+  "dependencies": {},
   "devDependencies": {
     "bower": "^1.3.12",
+    "express": "^4.12.4",
     "gulp": "^3.8.8",
     "gulp-jshint": "^1.8.5",
     "gulp-karma": "0.0.4",
@@ -37,6 +35,7 @@
     "js-yaml": "^3.2.2",
     "karma": "^0.12.24",
     "karma-firefox-launcher": "^0.1.3",
-    "karma-jasmine": "^0.1.5"
+    "karma-jasmine": "^0.1.5",
+    "multer": "^0.1.8"
   }
 }
