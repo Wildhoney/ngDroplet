@@ -879,7 +879,7 @@
 
                         // Emit the event to notify any listening scopes that the interface has been attached
                         // for communicating with the directive.
-                        $rootScope.$broadcast('$dropletReady');
+                        $rootScope.$broadcast('$dropletReady', $scope.interface);
 
                     });
 
