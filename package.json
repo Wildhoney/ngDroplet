@@ -6,6 +6,9 @@
   "scripts": {
     "test": "gulp test"
   },
+  "engines": {
+    "node": "4.1.1"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Wildhoney/ngDroplet.git"
