@@ -273,7 +273,18 @@
 
                                         // Parse the response, and then emit the event passing along the response
                                         // and the uploaded files!
-                                        var response = $scope.options.parserFn(this.httpRequest.responseText);
+                                        function parseJSON(str) {
+                                          var result;
+                                          try {
+                                            result = $scope.options.parserFn(str);
+                                          } catch (e) {
+                                            return str;
+                                          }
+                                          return result;
+                                        }
+
+
+                                        var response = parseJSON(this.httpRequest.responseText);
                                         $rootScope.$broadcast('$dropletSuccess', response, this.files);
                                         this.deferred.resolve(response, this.files);
 
