@@ -19,7 +19,6 @@ script:
 deploy:
   provider: heroku
   all_branches: true
-  skip_cleanup: true
   api_key:
     secure: jT9DjLDQOyS7Oh5vh6KOv8XAdYUcIy9fRjUdYPaag0LbR+HYjQ4Na6n5BJ3Y1/OQHVAWSR53vBg9xgKAmRy3WB3WgAKRe2I+8XQZZ1rwbNQAucyx7tMCqEZfn6IqztqG4z0FIOjSVpijjuBwNrLgF5ZYCFbV67FOisRwEoY2SNw=
   app: ng-droplet
