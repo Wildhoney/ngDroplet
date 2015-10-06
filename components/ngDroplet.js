@@ -471,8 +471,8 @@
 
                     // Create the model and then register the file.
                     var model = new $scope.DropletModel();
-                    model.load(file);
                     model.setType(type);
+                    model.load(file);
 
                     $scope.files.push(model);
                     return model;
