@@ -283,9 +283,7 @@
                                           return result;
                                         }
 
-
                                         var response = parseJSON(this.httpRequest.responseText);
-                                        $rootScope.$broadcast('$dropletSuccess', response, this.files);
                                         this.deferred.resolve(response, this.files);
 
                                         $scope.finishedUploading();
@@ -296,6 +294,8 @@
                                             model.setType($scope.FILE_TYPES.UPLOADED);
 
                                         });
+
+                                        $rootScope.$broadcast('$dropletSuccess', response, this.files);
 
                                     }.bind(this));
 
@@ -482,10 +482,11 @@
 
                     // Create the model and then register the file.
                     var model = new $scope.DropletModel();
-                    model.load(file);
                     model.setType(type);
-
                     $scope.files.push(model);
+
+                    model.load(file); //will broadcast the event once the model is complete
+
                     return model;
 
                 };
