@@ -16,6 +16,8 @@ script:
   - gulp test
   - gulp build
 
+sudo: false
+
 deploy:
   provider: heroku
   all_branches: true
