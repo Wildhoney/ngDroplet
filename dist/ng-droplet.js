@@ -40,7 +40,7 @@
                  * @constant FILE_TYPES
                  * @type {Object}
                  */
-                $scope.FILE_TYPES = { VALID: 1, INVALID: 2, DELETED: 4, UPLOADED: 8 };
+                $scope.FILE_TYPES = { VALID: 1, INVALID: 2, DELETED: 4, UPLOADED: 8, FAILED: 16 };
 
                 // Dynamically add the `ALL` property.
                 $scope.FILE_TYPES.ALL = Object.keys($scope.FILE_TYPES).reduce(function map(current, key) {
@@ -183,6 +183,13 @@
                      * @type {Boolean}
                      */
                     useArray: true,
+
+                    /**
+                     * @property maximumValidFiles
+                     * @type {Number|Infinity}
+                     * @default Infinity
+                     */
+                    maximumValidFiles: Infinity,
 
                     /**
                      * Additional headers to append to the request.
@@ -529,9 +536,11 @@
 
                         var file      = files[index],
                             extension = $scope.getExtension(file),
-                            type      = $scope.FILE_TYPES.VALID;
+                            type      = $scope.FILE_TYPES.VALID,
+                            maximum   = $scope.options.maximumValidFiles || Infinity,
+                            current   = $scope.filterFiles($scope.FILE_TYPES.VALID).length;
 
-                        if (!$scope.isValidExtension(extension)) {
+                        if (!$scope.isValidExtension(extension) || current >= maximum) {
 
                             // Invalid extension which we must reject!
                             type = $scope.FILE_TYPES.INVALID;
