@@ -183,6 +183,7 @@ With the above object you can merely print it to the screen like so: `{{interfac
 * `allowedExtensions`: Specifies the extensions permitted to be uploaded;
 * `defineHTTPSuccess`: List of HTTP status codes that denote success;
 * `useParser`: Configure a custom function for parsing the responses;
+* `maximumValidFiles`: Defines how many valid files are permitted at once;
 
 ### Custom Parser Function
 
