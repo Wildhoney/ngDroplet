@@ -185,6 +185,13 @@
                     useArray: true,
 
                     /**
+                     * @property maximumValidFiles
+                     * @type {Number|Infinity}
+                     * @default Infinity
+                     */
+                    maximumValidFiles: Infinity,
+
+                    /**
                      * Additional headers to append to the request.
                      *
                      * @property requestHeaders
@@ -529,9 +536,11 @@
 
                         var file      = files[index],
                             extension = $scope.getExtension(file),
-                            type      = $scope.FILE_TYPES.VALID;
+                            type      = $scope.FILE_TYPES.VALID,
+                            maximum   = $scope.options.maximumValidFiles || Infinity,
+                            current   = $scope.filterFiles($scope.FILE_TYPES.VALID).length;
 
-                        if (!$scope.isValidExtension(extension)) {
+                        if (!$scope.isValidExtension(extension) || current >= maximum) {
 
                             // Invalid extension which we must reject!
                             type = $scope.FILE_TYPES.INVALID;
