@@ -266,6 +266,28 @@
 
         });
 
+        it('Should be able to reject files when the limit has been exceeded;', function() {
+
+            var scope = compileDirective('<droplet></droplet>').scope;
+
+            scope.options.maximumValidFiles = 2;
+            scope.options.extensions        = ['png'];
+            scope.traverseFiles([mockFileModel, mockFileModel, mockFileModel]);
+
+            expect(scope.filterFiles(scope.FILE_TYPES.VALID).length).toEqual(2);
+            expect(scope.filterFiles(scope.FILE_TYPES.INVALID).length).toEqual(1);
+
+        });
+
+        it('Should be able to define a FILE_TYPES.ALL option;', function() {
+
+            var scope = compileDirective('<droplet></droplet>').scope,
+                FT    = scope.FILE_TYPES;
+
+            expect(FT.ALL).toEqual(FT.VALID | FT.INVALID | FT.DELETED | FT.UPLOADED | FT.FAILED);
+
+        });
+
     });
 
 })();
