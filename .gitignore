@@ -4,3 +4,4 @@
 !/example/js/vendor/.gitkeep
 /example/server/uploads/*
 !/example/server/uploads/.gitkeep
+npm-debug.log
