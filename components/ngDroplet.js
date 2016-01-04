@@ -2,6 +2,12 @@
 
     "use strict";
 
+    /**
+     * @property blankImage
+     * @type {String}
+     */
+    var blankImage = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+
     // The truest wisdom is a resolute determination...
     var module = $angular.module('ngDroplet', []).directive('droplet', ['$rootScope', '$window', '$timeout', '$q',
 
@@ -990,7 +996,7 @@
              * @property template
              * @type {String}
              */
-            template: '<img ng-show="model.isImage()" style="background-image: url({{imageData}})" class="droplet-preview" />',
+            template: '<img ng-show="model.isImage()" src="' + blankImage + '" style="background-image: url({{imageData}})" class="droplet-preview" />',
 
             /**
              * @method link
