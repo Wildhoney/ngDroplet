@@ -2,6 +2,12 @@
 
     "use strict";
 
+    /**
+     * @property blankImage
+     * @type {String}
+     */
+    var blankImage = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+
     // The truest wisdom is a resolute determination...
     var module = $angular.module('ngDroplet', []).directive('droplet', ['$rootScope', '$window', '$timeout', '$q',
 
@@ -66,13 +72,13 @@
                 $scope.isError = false;
 
                 /**
-                 * @method _isValid
+                 * @method isValid
                  * @param value {String|Number}
                  * @param values {Array}
                  * @return {Boolean}
                  * @private
                  */
-                var _isValid = function _isValid(value, values) {
+                var isValid = function isValid(value, values) {
 
                     /**
                      * @method conditionallyLowercase
@@ -134,7 +140,7 @@
                  * @return {Boolean}
                  */
                 $scope.isValidHTTPStatus = function isValidHTTPStatus(statusCode) {
-                    return _isValid(statusCode, $scope.options.statuses.success);
+                    return isValid(statusCode, $scope.options.statuses.success);
                 };
 
                 /**
@@ -143,7 +149,7 @@
                  * @return {Boolean}
                  */
                 $scope.isValidExtension = function isValidExtension(extension) {
-                    return _isValid(extension, $scope.options.extensions);
+                    return isValid(extension, $scope.options.extensions);
                 };
 
                 /**
@@ -990,7 +996,7 @@
              * @property template
              * @type {String}
              */
-            template: '<img ng-show="model.isImage()" style="background-image: url({{imageData}})" class="droplet-preview" />',
+            template: '<img ng-show="model.isImage()" src="' + blankImage + '" style="background-image: url({{imageData}})" class="droplet-preview" />',
 
             /**
              * @method link
