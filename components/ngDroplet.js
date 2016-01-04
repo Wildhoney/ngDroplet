@@ -66,13 +66,13 @@
                 $scope.isError = false;
 
                 /**
-                 * @method _isValid
+                 * @method isValid
                  * @param value {String|Number}
                  * @param values {Array}
                  * @return {Boolean}
                  * @private
                  */
-                var _isValid = function _isValid(value, values) {
+                var isValid = function isValid(value, values) {
 
                     /**
                      * @method conditionallyLowercase
@@ -134,7 +134,7 @@
                  * @return {Boolean}
                  */
                 $scope.isValidHTTPStatus = function isValidHTTPStatus(statusCode) {
-                    return _isValid(statusCode, $scope.options.statuses.success);
+                    return isValid(statusCode, $scope.options.statuses.success);
                 };
 
                 /**
@@ -143,7 +143,7 @@
                  * @return {Boolean}
                  */
                 $scope.isValidExtension = function isValidExtension(extension) {
-                    return _isValid(extension, $scope.options.extensions);
+                    return isValid(extension, $scope.options.extensions);
                 };
 
                 /**
