@@ -4,7 +4,6 @@
   "description": "Angular.js HTML5 file uploading with drag & drop and image/file preview.",
   "main": "dist/ng-droplet.min.js",
   "scripts": {
-    "postinstall": "bower i && gulp build",
     "test": "gulp test"
   },
   "engines": {
