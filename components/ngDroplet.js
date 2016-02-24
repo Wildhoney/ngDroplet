@@ -33,6 +33,7 @@
              */
             scope: {
                 interface: '=ngModel',
+                onLoad: '&',
                 onAdd: '&',
                 onDelete: '&',
                 onSuccess: '&',
@@ -915,6 +916,7 @@
                         // Emit the event to notify any listening scopes that the interface has been attached
                         // for communicating with the directive.
                         $rootScope.$broadcast('$dropletReady', $scope.interface);
+                        $scope.onLoad({ interface: $scope.interface });
 
                     });
 
