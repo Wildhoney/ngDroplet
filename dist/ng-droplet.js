@@ -32,7 +32,11 @@
              * @type {Object}
              */
             scope: {
-                interface: '=ngModel'
+                interface: '=ngModel',
+                onAdd: '&',
+                onDelete: '&',
+                onSuccess: '&',
+                onError: '&'
             },
 
             /**
@@ -309,7 +313,8 @@
 
                                         });
 
-                                        $rootScope.$broadcast('$dropletSuccess', response, this.files);
+                                        $scope.$emit('$dropletSuccess', response, this.files);
+                                        $scope.onSuccess({ response: response, files: this.files });
 
                                     }.bind(this));
 
@@ -342,7 +347,8 @@
                                 $scope.isError = true;
 
                                 var response = $scope.options.parserFn(this.httpRequest.responseText);
-                                $rootScope.$broadcast('$dropletError', response);
+                                $scope.$emit('$dropletError', response);
+                                $scope.onError({ response: response });
                                 this.deferred.reject(response);
 
                             }.bind(this));
@@ -417,7 +423,8 @@
                             this.extension = $scope.getExtension(file);
 
                             // File has been added!
-                            $rootScope.$broadcast('$dropletFileAdded', this);
+                            $scope.$emit('$dropletFileAdded', this);
+                            $scope.onAdd({ file: this });
 
                         },
 
@@ -430,7 +437,8 @@
                             this.setType($scope.FILE_TYPES.DELETED);
 
                             // File has been deleted!
-                            $rootScope.$broadcast('$dropletFileDeleted', this);
+                            $scope.$emit('$dropletFileDeleted', this);
+                            $scope.onDelete({ file: this });
 
                         },
 
