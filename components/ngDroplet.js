@@ -313,7 +313,7 @@
 
                                         });
 
-                                        $scope.$emit('$dropletSuccess', response, this.files);
+                                        $rootScope.$broadcast('$dropletSuccess', response, this.files);
                                         $scope.onSuccess({ response: response, files: this.files });
 
                                     }.bind(this));
@@ -347,7 +347,7 @@
                                 $scope.isError = true;
 
                                 var response = $scope.options.parserFn(this.httpRequest.responseText);
-                                $scope.$emit('$dropletError', response);
+                                $rootScope.$broadcast('$dropletError', response);
                                 $scope.onError({ response: response });
                                 this.deferred.reject(response);
 
@@ -423,7 +423,7 @@
                             this.extension = $scope.getExtension(file);
 
                             // File has been added!
-                            $scope.$emit('$dropletFileAdded', this);
+                            $rootScope.$broadcast('$dropletFileAdded', this);
                             $scope.onAdd({ file: this });
 
                         },
@@ -437,7 +437,7 @@
                             this.setType($scope.FILE_TYPES.DELETED);
 
                             // File has been deleted!
-                            $scope.$emit('$dropletFileDeleted', this);
+                            $rootScope.$broadcast('$dropletFileDeleted', this);
                             $scope.onDelete({ file: this });
 
                         },
