@@ -890,6 +890,12 @@
                             $scope.options.extensions = extensions;
 
                         },
+                        /**
+                        * @method maximumValidFiles
+                        * @param type {Number}
+                        * @return {void}
+                        */
+                        maximumValidFiles: $scope.options.maximumValidFiles,
 
                         /**
                          * @method defineHTTPSuccess
