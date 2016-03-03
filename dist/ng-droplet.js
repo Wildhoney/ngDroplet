@@ -837,6 +837,15 @@
                         },
 
                         /**
+                         * @method setMaximumValidFiles
+                         * @param value {Number}
+                         * @return {void}
+                         */
+                        setMaximumValidFiles: function setMaximumValidFiles(value) {
+                            $scope.options.maximumValidFiles = Number(value);
+                        },
+
+                        /**
                          * @method setRequestHeaders
                          * @param headers {Object}
                          * @return {void}
