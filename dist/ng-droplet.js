@@ -579,7 +579,7 @@
                         $scope.addFile(file, type);
 
                     }
-
+                    $rootScope.$broadcast('$dropletFilesProcessed', this);
                 };
 
                 /**
