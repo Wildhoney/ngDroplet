@@ -583,12 +583,11 @@
                 };
                 /**
                  * @method helperUpload
-                 * @param individualy {boolean}
+                 * @param Individually {boolean}
                  * @param model {Object}
-                 * @return deferred {Promise}
+                 * @return {$q.promise}
                  */
-                $scope.helperUpload = function helperUpload(individualy, model) {
-                    // Initiate the HTTP request.
+                $scope.helperUpload = function helperUpload(individually, model) {
                     var httpRequest   = new $window.XMLHttpRequest(),
                         formData      = new $window.FormData(),
                         fileProperty  = $scope.options.useArray ? 'file[]' : 'file',
@@ -596,6 +595,7 @@
                         requestLength = $scope.getRequestLength(queuedFiles),
                         deferred      = $q.defer();
 
+                    // Initiate the HTTP request.
                     httpRequest.open('post', $scope.options.requestUrl, true);
 
                     /**
@@ -634,7 +634,10 @@
                         $scope.listeners.error();
 
                     })();
-                    if (individualy) {
+
+                    // Iterate all of the valid files to append them to the previously created
+                    // `formData` object.
+                    if (individually) {
                         formData.append(fileProperty, model.file);
                     } else {
                         $angular.forEach(queuedFiles, function forEach(model) {
@@ -649,10 +652,10 @@
                 };
 
                 /**
-                 * @method uploadFilesIndividualy
+                 * @method uploadFilesIndividually
                  * @return {void}
                  */
-                $scope.uploadFilesIndividualy = function uploadFilesIndividualy() {
+                $scope.uploadFilesIndividually = function uploadFilesIndividually() {
 
                     // Reset...
                     $scope.isError = false;
@@ -773,10 +776,10 @@
                         uploadFiles: $scope.uploadFiles,
 
                         /**
-                         * @method uploadFilesIndividualy
+                         * @method uploadFilesIndividually
                          * @return {void}
                          */
-                        uploadFilesIndividualy: $scope.uploadFilesIndividualy,
+                        uploadFilesIndividually: $scope.uploadFilesIndividually,
 
                         /**
                          * @property progress
