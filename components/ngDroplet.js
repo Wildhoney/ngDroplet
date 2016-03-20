@@ -581,20 +581,17 @@
                     }
 
                 };
-
                 /**
-                 * @method uploadFiles
+                 * @method helperUpload
+                 * @param Individually {boolean}
+                 * @param model {Object}
                  * @return {$q.promise}
                  */
-                $scope.uploadFiles = function uploadFiles() {
-
-                    // Reset...
-                    $scope.isError = false;
-
+                $scope.helperUpload = function helperUpload(individually, model) {
                     var httpRequest   = new $window.XMLHttpRequest(),
                         formData      = new $window.FormData(),
-                        queuedFiles   = $scope.filterFiles($scope.FILE_TYPES.VALID),
                         fileProperty  = $scope.options.useArray ? 'file[]' : 'file',
+                        queuedFiles = $scope.filterFiles($scope.FILE_TYPES.VALID),
                         requestLength = $scope.getRequestLength(queuedFiles),
                         deferred      = $q.defer();
 
@@ -640,15 +637,45 @@
 
                     // Iterate all of the valid files to append them to the previously created
                     // `formData` object.
-                    $angular.forEach(queuedFiles, function forEach(model) {
+                    if (individually) {
                         formData.append(fileProperty, model.file);
-                    });
+                    } else {
+                        $angular.forEach(queuedFiles, function forEach(model) {
+                            formData.append(fileProperty, model.file);
+                        });
+                    }
 
                     // Voila...
                     $scope.isUploading = true;
                     httpRequest.send(formData);
                     return deferred.promise;
+                };
 
+                /**
+                 * @method uploadFilesIndividually
+                 * @return {void}
+                 */
+                $scope.uploadFilesIndividually = function uploadFilesIndividually() {
+
+                    // Reset...
+                    $scope.isError = false;
+
+                    var queuedFiles = $scope.filterFiles($scope.FILE_TYPES.VALID);
+
+                    $angular.forEach(queuedFiles, function (model) {
+                        $scope.helperUpload(true, model);
+                    });
+                };
+
+                /**
+                 * @method uploadFiles
+                 * @return {void}
+                 */
+                $scope.uploadFiles = function uploadFiles() {
+
+                    // Reset...
+                    $scope.isError = false;
+                    $scope.helperUpload(false);
                 };
 
                 /**
@@ -747,6 +774,12 @@
                          * @return {void}
                          */
                         uploadFiles: $scope.uploadFiles,
+
+                        /**
+                         * @method uploadFilesIndividually
+                         * @return {void}
+                         */
+                        uploadFilesIndividually: $scope.uploadFilesIndividually,
 
                         /**
                          * @property progress
