@@ -13,7 +13,7 @@
     "unused"        : true,
     "maxparams"     : 10,
     "maxdepth"      : 5,
-    "maxstatements" : 25,
+    "maxstatements" : 27,
     "maxcomplexity" : 10,
 
     "asi"           : true,
