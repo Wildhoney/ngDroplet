@@ -172,6 +172,14 @@
                     requestUrl: '',
 
                     /**
+                     * Name of the file property in the request.
+                     *
+                     * @property fileProperty
+                     * @type {String}
+                     */
+                    fileProperty: 'file',
+
+                    /**
                      * Determines whether the X-File-Size header is appended to the request.
                      *
                      * @property disableXFileSize
@@ -594,7 +602,9 @@
                     var httpRequest   = new $window.XMLHttpRequest(),
                         formData      = new $window.FormData(),
                         queuedFiles   = $scope.filterFiles($scope.FILE_TYPES.VALID),
-                        fileProperty  = $scope.options.useArray ? 'file[]' : 'file',
+                        fileProperty  = $scope.options.useArray ?
+                                        $scope.options.fileProperty + '[]' :
+                                        $scope.options.fileProperty,
                         requestLength = $scope.getRequestLength(queuedFiles),
                         deferred      = $q.defer();
 
@@ -834,6 +844,15 @@
                          */
                         setRequestUrl: function setRequestUrl(url) {
                             $scope.options.requestUrl = url;
+                        },
+
+                        /**
+                         * @method setFileProperty
+                         * @param name {String}
+                         * @return {void}
+                         */
+                        setFileProperty: function setFileProperty(name) {
+                            $scope.options.fileProperty = name;
                         },
 
                         /**
