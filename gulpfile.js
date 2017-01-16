@@ -1,7 +1,7 @@
 (function() {
-    
-    var yaml   = require('js-yaml'),
-        fs     = require('fs');
+
+    var yaml = require('js-yaml'),
+        fs   = require('fs');
 
     /**
      * @property {Object} config
