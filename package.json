@@ -36,6 +36,7 @@
     "gulp-karma": "0.0.5",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^2.0.0",
+    "jasmine-core": "^2.5.2",
     "js-yaml": "^3.7.0",
     "jshint": "^2.9.4",
     "karma": "^1.4.0",

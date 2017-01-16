@@ -92,10 +92,10 @@
                 }
             };
 
-            spyOn(Callback, 'Function').andCallThrough();
+            spyOn(Callback, 'Function').and.callThrough();
             scope.forEachFile(scope.FILE_TYPES.VALID, Callback.Function);
             expect(Callback.Function).toHaveBeenCalled();
-            expect(Callback.Function.calls.length).toEqual(3);
+            expect(Callback.Function.calls.count()).toBe(3);
 
         });
 
