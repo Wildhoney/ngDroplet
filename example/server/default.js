@@ -2,18 +2,18 @@
 
     "use strict";
 
-    var express        = require('express'),
-        app            = express(),
-        server         = require('http').createServer(app),
-        multer         = require('multer');
+    var express = require('express'),
+        app     = express(),
+        server  = require('http').createServer(app),
+        multer  = require('multer'),
+        upload  = multer({ dest: __dirname + '/uploads' });
 
     app.use(express.static(__dirname + '/..'));
-    app.use(multer({ dest: __dirname + '/uploads' }));
 
     // Responsible for handling the file upload.
-    app.post('/upload.html', function(request, response) {
+    app.post('/upload.html', upload.array('file'), function(request, response) {
 
-        var count = request.files.file.length;
+        var count = request.files.length;
         response.status(200).send(JSON.stringify({ success: true, fileCount: count }));
 
     });
