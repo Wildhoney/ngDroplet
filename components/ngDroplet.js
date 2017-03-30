@@ -572,7 +572,7 @@
                         var file      = files[index],
                             extension = $scope.getExtension(file),
                             type      = $scope.FILE_TYPES.VALID,
-                            maximum   = $scope.options.maximumValidFiles || Infinity,
+                            maximum   = $scope.interface.maximumValidFiles || Infinity,
                             current   = $scope.filterFiles($scope.FILE_TYPES.VALID).length;
 
                         if (!$scope.isValidExtension(extension) || current >= maximum) {
@@ -918,6 +918,12 @@
                             $scope.options.extensions = extensions;
 
                         },
+                        /**
+                        * @method maximumValidFiles
+                        * @param type {Number}
+                        * @return {void}
+                        */
+                        maximumValidFiles: $scope.options.maximumValidFiles,
 
                         /**
                          * @method defineHTTPSuccess
