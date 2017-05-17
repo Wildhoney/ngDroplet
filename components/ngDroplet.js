@@ -651,7 +651,7 @@
                     // Iterate all of the valid files to append them to the previously created
                     // `formData` object.
                     $angular.forEach(queuedFiles, function forEach(model) {
-                        formData.append(fileProperty, model.file);
+                        formData.append(fileProperty, model.file, $window.encodeURIComponent(model.file.name));
                     });
 
                     // Voila...
