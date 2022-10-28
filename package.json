@@ -39,7 +39,7 @@
     "jasmine-core": "^2.5.2",
     "js-yaml": "^3.7.0",
     "jshint": "^2.9.4",
-    "karma": "^1.4.0",
+    "karma": "^6.4.1",
     "karma-firefox-launcher": "^1.0.0",
     "karma-jasmine": "^1.1.0",
     "multer": "^1.2.1"
